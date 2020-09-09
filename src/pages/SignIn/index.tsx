@@ -19,7 +19,7 @@ import getValidationErrors from '../../utils/getValidationErrors';
 
 import { useAuth } from '../../hooks/auth';
 
-import logoImg from '../../assets/Logo.png';
+import logoImg from '../../assets/images/logo.png';
 
 import {
   Container,
