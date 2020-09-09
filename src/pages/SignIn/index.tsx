@@ -1,7 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import {
   Image,
-  View,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
@@ -25,6 +24,7 @@ import logoImg from '../../assets/Logo.png';
 import {
   Container,
   Title,
+  TitleContainer,
   ForgotPassword,
   ForgotPasswordText,
   CreateAccountButton,
@@ -91,7 +91,7 @@ const SignIn: React.FC = () => {
           <Container>
             <Image source={logoImg} />
 
-            <View>
+            <TitleContainer>
               <Title>Fazer login</Title>
               <CreateAccountButton
                 onPress={() => navigation.navigate('SignUp')}
@@ -100,7 +100,7 @@ const SignIn: React.FC = () => {
                   Criar uma conta
                 </CreateAccountButtonText>
               </CreateAccountButton>
-            </View>
+            </TitleContainer>
 
             <Form onSubmit={handleSignIn} ref={formRef}>
               <Input
@@ -125,12 +125,11 @@ const SignIn: React.FC = () => {
                 returnKeyType="send"
                 onSubmitEditing={() => formRef.current?.submitForm()}
               />
-
-              <Button onPress={() => formRef.current?.submitForm()}>
-                Entrar
-              </Button>
             </Form>
 
+            <Button onPress={() => formRef.current?.submitForm()}>
+              Entrar
+            </Button>
             <ForgotPassword>
               <ForgotPasswordText>Esqueci minha senha</ForgotPasswordText>
             </ForgotPassword>

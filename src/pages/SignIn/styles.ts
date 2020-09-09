@@ -7,14 +7,32 @@ export const Container = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding: 0 30px ${Platform.OS === 'android' ? 150 : 40}px;
+  padding: 40px 30px ${Platform.OS === 'android' ? 100 : 40}px;
+`;
+
+export const TitleContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 40px 0 10px;
 `;
 
 export const Title = styled.Text`
+  flex: 1;
   font-size: 24px;
   color: ${({ theme }) => theme.colors.primaryText};
   font-family: ${({ theme }) => theme.fonts.medium};
-  margin: 64px 0 24px;
+`;
+
+export const CreateAccountButton = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+`;
+
+export const CreateAccountButtonText = styled.Text`
+  color: ${({ theme }) => theme.colors.secondaryText};
+  font-size: 12px;
+  font-family: ${({ theme }) => theme.fonts.regular};
 `;
 
 export const ForgotPassword = styled.TouchableOpacity`
@@ -25,21 +43,4 @@ export const ForgotPasswordText = styled.Text`
   color: ${({ theme }) => theme.colors.primaryText};
   font-size: 16px;
   font-family: ${({ theme }) => theme.fonts.regular};
-`;
-
-export const CreateAccountButton = styled.TouchableOpacity`
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-`;
-
-export const CreateAccountButtonText = styled.Text`
-  color: ${({ theme }) => theme.colors.secondaryText};
-  font-size: 18px;
-  font-family: ${({ theme }) => theme.fonts.regular};
-  margin-left: 16px;
 `;
