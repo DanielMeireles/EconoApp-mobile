@@ -53,11 +53,7 @@ const SignUp: React.FC = () => {
 
         await api.post('/users', data);
 
-        Alert.alert(
-          'Cadastro realizado com sucesso!',
-          'Você ja pode fazer login na aplicação.',
-        );
-        navigation.goBack();
+        navigation.navigate('SignUpComplete');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
