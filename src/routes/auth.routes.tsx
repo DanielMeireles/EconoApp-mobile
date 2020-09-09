@@ -7,6 +7,7 @@ import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import SignUpComplete from '../pages/SignUpComplete';
 import ForgotPassword from '../pages/ForgotPassword';
+import ForgotPasswordComplete from '../pages/ForgotPasswordComplete';
 
 const Auth = createStackNavigator();
 
@@ -21,6 +22,10 @@ const AuthRoutes: React.FC = () => (
     <Auth.Screen name="SignUp" component={SignUp} />
     <Auth.Screen name="SignUpComplete" component={SignUpComplete} />
     <Auth.Screen name="ForgotPassword" component={ForgotPassword} />
+    <Auth.Screen
+      name="ForgotPasswordComplete"
+      component={ForgotPasswordComplete}
+    />
   </Auth.Navigator>
 );
 
