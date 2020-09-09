@@ -34,6 +34,10 @@ declare module 'styled-components' {
 
       calendarPrimary: string;
       calendarSecondary: string;
+      calendarSelected: string;
+      calendarTextPrimary: string;
+      calendarTextSecondary: string;
+      calendarTextSelected: string;
     };
 
     fonts: {
