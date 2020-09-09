@@ -47,6 +47,7 @@
     "import/prefer-default-export": "off",
     "no-unused-expressions": "off",
     "no-unused-vars": "off",
+    "no-use-before-define": "off",
     "prettier/prettier": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react-hooks/rules-of-hooks": "error",
