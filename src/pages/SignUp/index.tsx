@@ -23,6 +23,8 @@ import logoImg from '../../assets/images/logo.png';
 
 import { Container, Title, TitleContainer, Header } from './styles';
 
+import useKeyboardStatus from '../../hooks/keyboardStatus';
+
 interface SignUpFormData {
   name: string;
   email: string;
@@ -86,7 +88,7 @@ const SignUp: React.FC = () => {
             <BackButton onPress={() => navigation.goBack()} />
           </Header>
 
-          <Image source={logoImg} />
+          {!useKeyboardStatus() && <Image source={logoImg} />}
 
           <TitleContainer>
             <Title>Crie sua conta</Title>

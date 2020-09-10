@@ -23,6 +23,8 @@ import logoImg from '../../assets/images/logo.png';
 
 import { Container, Title, TitleContainer, Header } from './styles';
 
+import useKeyboardStatus from '../../hooks/keyboardStatus';
+
 interface ForgotPasswordFormData {
   email: string;
   password: string;
@@ -85,7 +87,7 @@ const ForgotPassword: React.FC = () => {
             <BackButton onPress={() => navigation.goBack()} />
           </Header>
 
-          <Image source={logoImg} />
+          {!useKeyboardStatus() && <Image source={logoImg} />}
 
           <TitleContainer>
             <Title>Redefinir senha</Title>

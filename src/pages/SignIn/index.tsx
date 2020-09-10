@@ -19,6 +19,8 @@ import getValidationErrors from '../../utils/getValidationErrors';
 
 import { useAuth } from '../../hooks/auth';
 
+import useKeyboardStatus from '../../hooks/keyboardStatus';
+
 import logoImg from '../../assets/images/logo.png';
 
 import {
@@ -89,7 +91,7 @@ const SignIn: React.FC = () => {
           contentContainerStyle={{ flex: 1 }}
         >
           <Container>
-            <Image source={logoImg} />
+            {!useKeyboardStatus() && <Image source={logoImg} />}
 
             <TitleContainer>
               <Title>Fazer login</Title>
