@@ -10,6 +10,7 @@ declare module 'styled-components' {
       headerBackground: string;
       headerPrimaryText: string;
       headerSecondaryText: string;
+      headerTertiaryText: string;
       headerElement: string;
 
       inputBackground: string;

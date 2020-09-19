@@ -7,8 +7,9 @@ const defaultTheme: DefaultTheme = {
     background: '#312E38',
 
     headerBackground: '#28262E',
-    headerPrimaryText: '#27AE60',
-    headerSecondaryText: '999591',
+    headerPrimaryText: '#F4EDE8',
+    headerSecondaryText: '#27ae60',
+    headerTertiaryText: '#666360',
     headerElement: '#27AE60',
 
     inputBackground: '#232129',
