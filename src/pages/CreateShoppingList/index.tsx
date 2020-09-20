@@ -119,7 +119,7 @@ const CreateShoppingList: React.FC = () => {
             uri: image,
           });
 
-          api.patch(`/shoppinglists/${shoppingList.id}/image`, dataImage);
+          await api.patch(`/shoppinglists/${shoppingList.id}/image`, dataImage);
 
           handleGoBack();
         } catch (err) {
