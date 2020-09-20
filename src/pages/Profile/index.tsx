@@ -183,9 +183,7 @@ const Profile: React.FC = () => {
               {!useKeyboardStatus() && (
                 <UserAvatar
                   source={{
-                    uri:
-                      user.avatar_url ||
-                      'https://api.adorable.io/avatars/186/abott@adorable.png',
+                    uri: user.avatar_url,
                   }}
                 />
               )}
