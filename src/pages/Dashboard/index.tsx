@@ -21,6 +21,8 @@ import {
   ShoppingListName,
   ShoppingListMeta,
   ShoppingListMetaText,
+  ContainerButton,
+  AddButton,
 } from './styles';
 import api from '../../services/api';
 
@@ -97,6 +99,9 @@ const Dashboard: React.FC = () => {
           </ShoppingListContainer>
         )}
       />
+      <ContainerButton>
+        <AddButton>+</AddButton>
+      </ContainerButton>
     </Container>
   );
 };

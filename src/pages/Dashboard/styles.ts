@@ -3,6 +3,7 @@ import { FlatList } from 'react-native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { RectButton } from 'react-native-gesture-handler';
 
+import Button from '../../components/Button';
 import { ShoppingList } from './index';
 
 export const Container = styled.View`
@@ -42,12 +43,12 @@ export const UserAvatar = styled.Image`
 export const ShoppingLists = styled(
   FlatList as new () => FlatList<ShoppingList>,
 )`
-  padding: 32px 24px 16px;
+  padding: 10px 24px;
 `;
 
 export const ShoppingListsTitle = styled.Text`
   font-size: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
   color: ${({ theme }) => theme.colors.primaryText};
   font-family: ${({ theme }) => theme.fonts.medium};
 `;
@@ -88,4 +89,17 @@ export const ShoppingListMetaText = styled.Text`
   margin-left: 8px;
   color: ${({ theme }) => theme.colors.cardText};
   font-family: ${({ theme }) => theme.fonts.regular};
+`;
+
+export const ContainerButton = styled.View`
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+`;
+
+export const AddButton = styled(Button)`
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  font-size: 50px;
 `;
