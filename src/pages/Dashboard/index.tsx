@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
-import Moment from 'moment';
+import { format } from 'date-fns';
 
 import { useTheme } from 'styled-components';
 import { useAuth } from '../../hooks/auth';
@@ -92,7 +92,7 @@ const Dashboard: React.FC = () => {
                   color={theme.colors.cardElement}
                 />
                 <ShoppingListMetaText>
-                  {Moment(shoppingList.date).format('DD/MM/YYYY')}
+                  {format(new Date(shoppingList.date), 'dd/mm/yyyy')}
                 </ShoppingListMetaText>
               </ShoppingListMeta>
             </ShoppingListInfo>
