@@ -96,7 +96,7 @@ const Dashboard: React.FC = () => {
                   color={theme.colors.cardElement}
                 />
                 <ShoppingListMetaText>
-                  {format(new Date(shoppingList.date), 'dd/mm/yyyy')}
+                  {format(new Date(shoppingList.date), 'dd/MM/yyyy')}
                 </ShoppingListMetaText>
               </ShoppingListMeta>
             </ShoppingListInfo>
