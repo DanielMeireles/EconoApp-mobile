@@ -52,6 +52,10 @@ const Dashboard: React.FC = () => {
     navigate('Profile');
   }, [navigate]);
 
+  const navigateToCreateShoppingList = useCallback(() => {
+    navigate('CreateShoppingList');
+  }, [navigate]);
+
   return (
     <Container>
       <Header>
@@ -100,7 +104,7 @@ const Dashboard: React.FC = () => {
         )}
       />
       <ContainerButton>
-        <AddButton>+</AddButton>
+        <AddButton onPress={navigateToCreateShoppingList}>+</AddButton>
       </ContainerButton>
     </Container>
   );

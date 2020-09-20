@@ -87,6 +87,7 @@ export const ShoppingListMeta = styled.View`
 
 export const ShoppingListMetaText = styled.Text`
   margin-left: 8px;
+  margin-top: 4px;
   color: ${({ theme }) => theme.colors.cardText};
   font-family: ${({ theme }) => theme.fonts.regular};
 `;
