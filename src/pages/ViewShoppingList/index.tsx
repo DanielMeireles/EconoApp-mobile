@@ -36,7 +36,7 @@ interface ShoppingListFormData {
   description: string;
 }
 
-const CreateShoppingList: React.FC = () => {
+const ViewShoppingList: React.FC = () => {
   const theme = useTheme();
   const formRef = useRef<FormHandles>(null);
   const nameInputRef = useRef<TextInput>(null);
@@ -218,4 +218,4 @@ const CreateShoppingList: React.FC = () => {
   );
 };
 
-export default CreateShoppingList;
+export default ViewShoppingList;

@@ -53,6 +53,10 @@ const Dashboard: React.FC = () => {
   }, [navigate]);
 
   const navigateToCreateShoppingList = useCallback(() => {
+    navigate('ViewShoppingList');
+  }, [navigate]);
+
+  const navigateToShoppingList = useCallback(() => {
     navigate('CreateShoppingList');
   }, [navigate]);
 
@@ -79,7 +83,7 @@ const Dashboard: React.FC = () => {
           <ShoppingListsTitle>Listas de Compras</ShoppingListsTitle>
         }
         renderItem={({ item: shoppingList }) => (
-          <ShoppingListContainer onPress={() => {}}>
+          <ShoppingListContainer onPress={navigateToShoppingList}>
             <ShoppingListImage
               source={{
                 uri: shoppingList.image_url,
