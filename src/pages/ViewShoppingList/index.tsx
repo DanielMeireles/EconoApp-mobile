@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { useRoute, RouteProp } from '@react-navigation/native';
 
@@ -52,36 +52,36 @@ const ViewShoppingList: React.FC = () => {
   const [shoppingListItems, setShoppingListItems] = useState<
     ShoppingListItem[]
   >([]);
-  const [
-    shoppingListItemsWithProduct,
-    setShoppingListItemsWithProduct,
-  ] = useState<ShoppingListItem[]>([]);
 
   useEffect(() => {
     setShoppingList(route.params.shoppingList);
-    api
-      .get(`/shoppinglistitems/findByShoppingListId/${shoppingList.id}`)
-      .then((response) => {
-        setShoppingListItems(response.data);
-      });
-  }, [route.params.shoppingList, shoppingList.id]);
 
-  useEffect(() => {
-    shoppingListItems.map(async (shoppingListItem) => {
-      const product = await api.get(
-        `/products/findById/${shoppingListItem.product_id}`,
+    async function getShoppingListItems(): Promise<void> {
+      const shoppingListItemsResponse = await api.get(
+        `/shoppinglistitems/findByShoppingListId/${shoppingList.id}`,
       );
 
-      Object.assign(shoppingListItem, {
-        product: product.data,
-      });
+      const shoppingListItemsData: ShoppingListItem[] =
+        shoppingListItemsResponse.data;
 
-      setShoppingListItemsWithProduct([
-        ...shoppingListItemsWithProduct,
-        shoppingListItem,
-      ]);
-    });
-  }, [shoppingListItems, shoppingListItemsWithProduct]);
+      shoppingListItemsData.map(async (shoppingListItem) => {
+        const productResponse = await api.get(
+          `/products/findById/${shoppingListItem.product_id}`,
+        );
+
+        const product: Product = productResponse.data;
+
+        await Object.assign(shoppingListItem, {
+          product,
+        });
+
+        setShoppingListItems([...shoppingListItems, shoppingListItem]);
+      });
+    }
+
+    getShoppingListItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [route.params.shoppingList, shoppingList.id]);
 
   return (
     <Container>
@@ -97,7 +97,7 @@ const ViewShoppingList: React.FC = () => {
       </Header>
 
       <ShoppingListItems
-        data={shoppingListItemsWithProduct}
+        data={shoppingListItems}
         keyExtractor={(shoppingListItem) => shoppingListItem.id}
         ListHeaderComponent={
           <ShoppingListItemsTitle>Lista</ShoppingListItemsTitle>
