@@ -1,6 +1,9 @@
 import styled from 'styled-components/native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
+import { FlatList } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
+
+import { ShoppingListItem } from './index';
 
 export const Container = styled.View`
   flex: 1;
@@ -25,17 +28,30 @@ export const HeaderTitle = styled.Text`
 
 export const BackButton = styled.TouchableOpacity``;
 
-export const Content = styled.ScrollView`
-  padding: 20px 20px;
+export const ShoppingListItems = styled(
+  FlatList as new () => FlatList<ShoppingListItem>,
+)`
+  padding: 10px 24px;
 `;
 
-export const ShoppingListImageButton = styled.TouchableOpacity`
-  margin-bottom: 20px;
+export const ShoppingListItemsTitle = styled.Text`
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: ${({ theme }) => theme.colors.primaryText};
+  font-family: ${({ theme }) => theme.fonts.medium};
 `;
 
-export const ShoppingListImage = styled.Image`
-  width: 120px;
-  height: 120px;
-  border-radius: 98px;
-  align-self: center;
+export const ShoppingListItemContainer = styled(RectButton)`
+  background: ${({ theme }) => theme.colors.cardBackground};
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const ShoppingListItemName = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.medium};
+  color: ${({ theme }) => theme.colors.cardTitle};
+  font-size: 18px;
 `;
