@@ -21,6 +21,7 @@ export const Description = styled.Text`
   font-size: 18px;
   color: ${({ theme }) => theme.colors.tertiaryText};
   margin-top: 16px;
+  text-align: center;
 `;
 
 export const OkButton = styled(Button)`

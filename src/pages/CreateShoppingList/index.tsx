@@ -123,7 +123,7 @@ const CreateShoppingList: React.FC = () => {
 
           await api.patch(`/shoppinglists/${shoppingList.id}/image`, dataImage);
         }
-        navigateToCreateShoppingListComplete;
+        navigateToCreateShoppingListComplete();
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);

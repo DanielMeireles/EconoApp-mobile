@@ -1,16 +1,13 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
-import ImagePicker, { ImagePickerResponse } from 'react-native-image-picker';
-import FormData from 'form-data';
-import { useNavigation } from '@react-navigation/native';
-import * as Yup from 'yup';
+import { useRoute, RouteProp } from '@react-navigation/native';
 
 import { useTheme } from 'styled-components';
-import { Platform, TextInput, Alert } from 'react-native';
+import { TextInput } from 'react-native';
 import {
   Container,
   Header,
@@ -21,129 +18,42 @@ import {
   ShoppingListImage,
 } from './styles';
 
-import api from '../../services/api';
 import useKeyboardStatus from '../../hooks/keyboardStatus';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import { ShoppingList } from '../Dashboard';
-import getValidationErrors from '../../utils/getValidationErrors';
 
-interface ShoppingListFormData {
-  name: string;
-  date: string;
-  description: string;
-}
+type ParamList = {
+  shoppingList: {
+    shoppingList: ShoppingList;
+  };
+};
 
 const ViewShoppingList: React.FC = () => {
   const theme = useTheme();
+
+  const route = useRoute<RouteProp<ParamList, 'shoppingList'>>();
+
+  const [shoppingList, setShoppingList] = useState({} as ShoppingList);
+
+  useEffect(() => {
+    setShoppingList(route.params.shoppingList);
+  }, [route.params.shoppingList]);
+
   const formRef = useRef<FormHandles>(null);
   const nameInputRef = useRef<TextInput>(null);
   const dateInputRef = useRef<TextInput>(null);
   const descriptionInputRef = useRef<TextInput>(null);
 
-  const [image, setImage] = useState<ImagePickerResponse | null>(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  const { navigate } = useNavigation();
-
-  const navigateToCreateShoppingListComplete = useCallback(() => {
-    navigate('CreateShoppingListComplete');
-  }, [navigate]);
-
-  const navigateToDashboard = useCallback(() => {
-    navigate('Dashboard');
-  }, [navigate]);
-
-  const handleToggleDatePicker = useCallback(() => {
-    setShowDatePicker((state) => !state);
-  }, []);
-
-  const handleDateChanged = useCallback((_, date: Date | undefined) => {
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false);
-    }
-
-    if (date) {
-      setSelectedDate(date);
-    }
-  }, []);
-
-  const handleUpdateShoppingListImage = useCallback(() => {
-    ImagePicker.showImagePicker(
-      {
-        title: 'Selecione uma imagem',
-        cancelButtonTitle: 'Cancelar',
-        takePhotoButtonTitle: 'Usar câmera',
-        chooseFromLibraryButtonTitle: 'Escolher da galeria',
-      },
-      (responseImage) => {
-        if (responseImage.didCancel) {
-          return;
-        }
-
-        if (responseImage.error) {
-          Alert.alert('Erro ao atualizar a imagem.');
-          return;
-        }
-
-        setImage(responseImage);
-      },
-    );
-  }, []);
-
-  const handleSubmit = useCallback(
-    async (data: ShoppingListFormData) => {
-      try {
-        formRef.current?.setErrors({});
-
-        const schema = Yup.object().shape({
-          name: Yup.string().required('Nome é obrigatório'),
-          description: Yup.string().required('Descrição é obrigatória'),
-        });
-
-        await schema.validate(data, { abortEarly: false });
-
-        const shoppingList: ShoppingList = await api.post('/shoppinglists', {
-          name: data.name,
-          description: data.description,
-          date: selectedDate,
-        });
-
-        if (image) {
-          const dataImage: FormData = new FormData();
-
-          dataImage.append('image', {
-            type: 'image/jpeg',
-            name: `${shoppingList.id}.jpg`,
-            uri: image.uri,
-          });
-
-          await api.patch(`/shoppinglists/${shoppingList.id}/image`, dataImage);
-        }
-        navigateToCreateShoppingListComplete;
-      } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err);
-
-          formRef.current?.setErrors(errors);
-          return;
-        }
-        Alert.alert(
-          'Erro ao criar a lista de compras',
-          'Ocorreu um erro ao criar a lista de compras, tente novamente',
-        );
-      }
-    },
-    [image, navigateToCreateShoppingListComplete, selectedDate],
-  );
 
   return (
     <Container>
       <Header>
-        <BackButton onPress={navigateToDashboard}>
+        <BackButton onPress={() => {}}>
           <Icon
             name="chevron-left"
             size={24}
@@ -155,7 +65,7 @@ const ViewShoppingList: React.FC = () => {
 
       <Content>
         {!useKeyboardStatus() && (
-          <ShoppingListImageButton onPress={handleUpdateShoppingListImage}>
+          <ShoppingListImageButton onPress={() => {}}>
             <ShoppingListImage
               source={{
                 uri: 'https://api.adorable.io/avatars/186/abott@adorable.png',
@@ -163,7 +73,7 @@ const ViewShoppingList: React.FC = () => {
             />
           </ShoppingListImageButton>
         )}
-        <Form onSubmit={handleSubmit} ref={formRef}>
+        <Form onSubmit={() => {}} ref={formRef}>
           <Input
             ref={nameInputRef}
             autoCorrect={false}
@@ -186,7 +96,7 @@ const ViewShoppingList: React.FC = () => {
             name="date"
             placeholder="Data"
             returnKeyType="next"
-            onTouchStart={handleToggleDatePicker}
+            onTouchStart={() => {}}
             onSubmitEditing={() => {
               dateInputRef.current?.focus();
             }}
@@ -194,7 +104,7 @@ const ViewShoppingList: React.FC = () => {
           {showDatePicker && (
             <DateTimePicker
               value={selectedDate}
-              onChange={handleDateChanged}
+              onChange={() => {}}
               mode="date"
               display="calendar"
             />

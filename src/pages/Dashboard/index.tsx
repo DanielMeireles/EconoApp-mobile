@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 import { format } from 'date-fns';
 
@@ -42,21 +42,25 @@ const Dashboard: React.FC = () => {
   const { navigate } = useNavigation();
   const theme = useTheme();
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     api.get('/shoppinglists').then((response) => {
       setShoppingLists(response.data);
     });
   }, []);
 
+  useEffect(() => {
+    api.get('/shoppinglists').then((response) => {
+      setShoppingLists(response.data);
+    });
+  }, [isFocused]);
+
   const navigateToProfile = useCallback(() => {
     navigate('Profile');
   }, [navigate]);
 
   const navigateToCreateShoppingList = useCallback(() => {
-    navigate('ViewShoppingList');
-  }, [navigate]);
-
-  const navigateToShoppingList = useCallback(() => {
     navigate('CreateShoppingList');
   }, [navigate]);
 
@@ -83,7 +87,11 @@ const Dashboard: React.FC = () => {
           <ShoppingListsTitle>Listas de Compras</ShoppingListsTitle>
         }
         renderItem={({ item: shoppingList }) => (
-          <ShoppingListContainer onPress={navigateToShoppingList}>
+          <ShoppingListContainer
+            onPress={() => {
+              navigate('ViewShoppingList', { shoppingList });
+            }}
+          >
             <ShoppingListImage
               source={{
                 uri: shoppingList.image_url,
