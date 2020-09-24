@@ -23,9 +23,18 @@ type ParamList = {
   };
 };
 
+export interface Product {
+  id: string;
+  name: string;
+  brand: string;
+  description: string;
+  image_url: string;
+}
+
 export interface ShoppingListItem {
   id: string;
   product_id: string;
+  product?: Product;
   shoppinglist_id: string;
   date: Date;
   quantity: number;
@@ -43,16 +52,36 @@ const ViewShoppingList: React.FC = () => {
   const [shoppingListItems, setShoppingListItems] = useState<
     ShoppingListItem[]
   >([]);
+  const [
+    shoppingListItemsWithProduct,
+    setShoppingListItemsWithProduct,
+  ] = useState<ShoppingListItem[]>([]);
 
   useEffect(() => {
     setShoppingList(route.params.shoppingList);
-
     api
       .get(`/shoppinglistitems/findByShoppingListId/${shoppingList.id}`)
       .then((response) => {
         setShoppingListItems(response.data);
       });
   }, [route.params.shoppingList, shoppingList.id]);
+
+  useEffect(() => {
+    shoppingListItems.map(async (shoppingListItem) => {
+      const product = await api.get(
+        `/products/findById/${shoppingListItem.product_id}`,
+      );
+
+      Object.assign(shoppingListItem, {
+        product: product.data,
+      });
+
+      setShoppingListItemsWithProduct([
+        ...shoppingListItemsWithProduct,
+        shoppingListItem,
+      ]);
+    });
+  }, [shoppingListItems, shoppingListItemsWithProduct]);
 
   return (
     <Container>
@@ -68,14 +97,16 @@ const ViewShoppingList: React.FC = () => {
       </Header>
 
       <ShoppingListItems
-        data={shoppingListItems}
+        data={shoppingListItemsWithProduct}
         keyExtractor={(shoppingListItem) => shoppingListItem.id}
         ListHeaderComponent={
           <ShoppingListItemsTitle>Lista</ShoppingListItemsTitle>
         }
         renderItem={({ item: shoppingListItem }) => (
           <ShoppingListItemContainer onPress={() => {}}>
-            <ShoppingListItemName>{shoppingListItem.id}</ShoppingListItemName>
+            <ShoppingListItemName>
+              {shoppingListItem.product?.name}
+            </ShoppingListItemName>
           </ShoppingListItemContainer>
         )}
       />
