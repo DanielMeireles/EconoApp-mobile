@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { useRoute, RouteProp } from '@react-navigation/native';
 
@@ -12,7 +12,11 @@ import {
   ShoppingListItemsTitle,
   ShoppingListItemContainer,
   ShoppingListItemName,
+  ContainerButton,
+  AddButton,
 } from './styles';
+
+import ShoppingListItemCard from '../../components/ShoppingListItemCard';
 
 import { ShoppingList } from '../Dashboard';
 import api from '../../services/api';
@@ -55,7 +59,6 @@ const ViewShoppingList: React.FC = () => {
 
   useEffect(() => {
     setShoppingList(route.params.shoppingList);
-
     async function getShoppingListItems(): Promise<void> {
       const shoppingListItemsResponse = await api.get(
         `/shoppinglistitems/findByShoppingListId/${shoppingList.id}`,
@@ -103,13 +106,14 @@ const ViewShoppingList: React.FC = () => {
           <ShoppingListItemsTitle>Lista</ShoppingListItemsTitle>
         }
         renderItem={({ item: shoppingListItem }) => (
-          <ShoppingListItemContainer onPress={() => {}}>
-            <ShoppingListItemName>
-              {shoppingListItem.product?.name}
-            </ShoppingListItemName>
-          </ShoppingListItemContainer>
+          <ShoppingListItemCard>
+            {shoppingListItem.product?.name}
+          </ShoppingListItemCard>
         )}
       />
+      <ContainerButton>
+        <AddButton onPress={() => {}}>+</AddButton>
+      </ContainerButton>
     </Container>
   );
 };
