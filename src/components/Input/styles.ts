@@ -19,6 +19,8 @@ export const Container = styled.View<ContainerProps>`
   background: ${({ theme }) => theme.colors.inputBackground};
   border-radius: 10px;
   margin-bottom: 8px;
+  margin-right: 4px;
+  margin-left: 4px;
 
   border-width: 2px;
   border-color: ${({ theme }) => theme.colors.inputBackground};
