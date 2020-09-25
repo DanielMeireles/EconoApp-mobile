@@ -1,9 +1,6 @@
 import styled, { css } from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
-
-interface ShoppingListItemProps {
-  isOpened: boolean;
-}
+import CheckBox from '@react-native-community/checkbox';
 
 export const ShoppingListItemsTitle = styled.Text`
   font-size: 24px;
@@ -12,29 +9,37 @@ export const ShoppingListItemsTitle = styled.Text`
   font-family: ${({ theme }) => theme.fonts.medium};
 `;
 
-export const ShoppingListItemContainer = styled(RectButton)<
-  ShoppingListItemProps
->`
+export const ShoppingListItemContainer = styled.View`
   background: ${({ theme }) => theme.colors.cardBackground};
   border-radius: 10px;
   padding: 20px 10px 20px 10px;
   margin-bottom: 16px;
   flex-direction: column;
   align-items: center;
-
-  ${(props) => props.isOpened && css``}
-`;
-
-export const ShoppingListItemName = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.medium};
-  color: ${({ theme }) => theme.colors.cardTitle};
-  font-size: 18px;
 `;
 
 export const ShoppingListItemMain = styled.View`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+`;
+
+export const CheckBoxButton = styled(CheckBox)`
+  margin-right: 5px;
+`;
+
+export const ShoppingListItemTitle = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const ShoppingListItemName = styled.Text`
+  margin-top: 3px;
+  font-family: ${({ theme }) => theme.fonts.medium};
+  color: ${({ theme }) => theme.colors.cardTitle};
+  font-size: 18px;
 `;
 
 export const ShoppingListItemDetail = styled.View`

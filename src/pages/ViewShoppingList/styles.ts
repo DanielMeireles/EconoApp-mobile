@@ -3,7 +3,8 @@ import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { FlatList } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 
-import { ShoppingListItem } from './index';
+import { ShoppingListItem } from '../../components/ShoppingListItemCard';
+
 import Button from '../../components/Button';
 
 interface ShoppingListItemProps {
@@ -44,24 +45,6 @@ export const ShoppingListItemsTitle = styled.Text`
   margin-bottom: 10px;
   color: ${({ theme }) => theme.colors.primaryText};
   font-family: ${({ theme }) => theme.fonts.medium};
-`;
-
-export const ShoppingListItemContainer = styled(RectButton)<
-  ShoppingListItemProps
->`
-  background: ${({ theme }) => theme.colors.cardBackground};
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 16px;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-export const ShoppingListItemName = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.medium};
-  color: ${({ theme }) => theme.colors.cardTitle};
-  font-size: 18px;
 `;
 
 export const ContainerButton = styled.View`

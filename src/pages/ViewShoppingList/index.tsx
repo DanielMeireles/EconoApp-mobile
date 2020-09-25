@@ -10,13 +10,14 @@ import {
   BackButton,
   ShoppingListItems,
   ShoppingListItemsTitle,
-  ShoppingListItemContainer,
-  ShoppingListItemName,
   ContainerButton,
   AddButton,
 } from './styles';
 
-import ShoppingListItemCard from '../../components/ShoppingListItemCard';
+import ShoppingListItemCard, {
+  Product,
+  ShoppingListItem,
+} from '../../components/ShoppingListItemCard';
 
 import { ShoppingList } from '../Dashboard';
 import api from '../../services/api';
@@ -26,26 +27,6 @@ type ParamList = {
     shoppingList: ShoppingList;
   };
 };
-
-export interface Product {
-  id: string;
-  name: string;
-  brand: string;
-  description: string;
-  image_url: string;
-}
-
-export interface ShoppingListItem {
-  id: string;
-  product_id: string;
-  product?: Product;
-  shoppinglist_id: string;
-  date: Date;
-  quantity: number;
-  value: number;
-  longitude: number;
-  latitude: number;
-}
 
 const ViewShoppingList: React.FC = () => {
   const theme = useTheme();
@@ -106,9 +87,7 @@ const ViewShoppingList: React.FC = () => {
           <ShoppingListItemsTitle>Lista</ShoppingListItemsTitle>
         }
         renderItem={({ item: shoppingListItem }) => (
-          <ShoppingListItemCard>
-            {shoppingListItem.product?.name}
-          </ShoppingListItemCard>
+          <ShoppingListItemCard shoppingListItem={shoppingListItem} />
         )}
       />
       <ContainerButton>
