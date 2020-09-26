@@ -60,7 +60,7 @@ export const ShoppingListItemDetail = styled.View`
 `;
 
 export const ShoppingListItemSecondaryDetail = styled.View`
-  width: 48.8%;
+  width: 50%;
   flex-direction: row;
   justify-content: space-between;
 `;
@@ -86,4 +86,14 @@ export const Text = styled.Text`
   font-family: ${({ theme }) => theme.fonts.regular};
   width: 70%;
   margin-left: 20px;
+`;
+
+export const InputLeft = styled.View`
+  width: 97.5%;
+  margin-right: 4px;
+`;
+
+export const InputRight = styled.View`
+  width: 97.5%;
+  margin-left: 4px;
 `;

@@ -17,10 +17,11 @@ import {
   Image,
   Text,
   CheckBoxButton,
+  InputLeft,
+  InputRight,
 } from './styles';
 
 import Input from '../Input';
-import Button from '../Button';
 
 import qrcodeImg from '../../assets/images/qr-code.png';
 import getValidationErrors from '../../utils/getValidationErrors';
@@ -223,34 +224,38 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
                 }}
               />
               <ShoppingListItemSecondaryDetail>
-                <Input
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  keyboardType="number-pad"
-                  name="quantity"
-                  onEndEditing={() => formRef.current?.submitForm()}
-                  ref={quantityInputRef}
-                  defaultValue={String(isItem.quantity)}
-                  placeholder="Quantidade"
-                  returnKeyType="next"
-                  onSubmitEditing={() => {
-                    quantityInputRef.current?.focus();
-                  }}
-                />
-                <Input
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  keyboardType="decimal-pad"
-                  name="value"
-                  onEndEditing={() => formRef.current?.submitForm()}
-                  ref={valueInputRef}
-                  defaultValue={String(isItem.value)}
-                  placeholder="Valor Unitário"
-                  returnKeyType="next"
-                  onSubmitEditing={() => {
-                    valueInputRef.current?.focus();
-                  }}
-                />
+                <InputLeft>
+                  <Input
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    keyboardType="number-pad"
+                    name="quantity"
+                    onEndEditing={() => formRef.current?.submitForm()}
+                    ref={quantityInputRef}
+                    defaultValue={String(isItem.quantity)}
+                    placeholder="Quantidade"
+                    returnKeyType="next"
+                    onSubmitEditing={() => {
+                      quantityInputRef.current?.focus();
+                    }}
+                  />
+                </InputLeft>
+                <InputRight>
+                  <Input
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    keyboardType="decimal-pad"
+                    name="value"
+                    onEndEditing={() => formRef.current?.submitForm()}
+                    ref={valueInputRef}
+                    defaultValue={String(isItem.value)}
+                    placeholder="Valor Unitário"
+                    returnKeyType="next"
+                    onSubmitEditing={() => {
+                      valueInputRef.current?.focus();
+                    }}
+                  />
+                </InputRight>
               </ShoppingListItemSecondaryDetail>
             </ShoppingListItemDetail>
           </Form>
