@@ -63,12 +63,21 @@ const CreateShoppingListItem: React.FC = () => {
           setIsProducts(response.data);
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        const productAux = {} as IProduct;
+        Object.assign(productAux, {
+          name: product_name,
+          brand: '',
+          description: '',
+        });
+        setIsProduct(productAux);
+      });
   }, []);
 
   useEffect(() => {
     if (isProducts[0]) {
       const productAux = {} as IProduct;
+
       Object.assign(productAux, {
         name: isProducts[0].name,
         brand: isProducts[0].brand,
