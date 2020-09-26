@@ -37,6 +37,15 @@ const ForgotPassword: React.FC = () => {
 
   const navigation = useNavigation();
 
+  const handleNavigateSuccessPage = useCallback(() => {
+    navigation.navigate('SuccessPage', {
+      title: 'Redefinição enviada',
+      description:
+        'Agora é só checar o e-mail que foi enviado para você redefinir sua senha.',
+      goToPage: 'SignIn',
+    });
+  }, [navigation]);
+
   const handleSubmit = useCallback(
     async (data: ForgotPasswordFormData) => {
       try {
@@ -54,7 +63,7 @@ const ForgotPassword: React.FC = () => {
           email: data.email,
         });
 
-        navigation.navigate('ForgotPasswordComplete');
+        handleNavigateSuccessPage();
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -69,7 +78,7 @@ const ForgotPassword: React.FC = () => {
         );
       }
     },
-    [navigation],
+    [handleNavigateSuccessPage],
   );
 
   return (
