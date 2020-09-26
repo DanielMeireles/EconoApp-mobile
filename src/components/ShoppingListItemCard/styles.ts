@@ -1,6 +1,10 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
+
+export interface ICheckedProps {
+  isChecked: boolean;
+}
 
 export const ShoppingListItemsTitle = styled.Text`
   font-size: 24px;
@@ -35,11 +39,17 @@ export const ShoppingListItemTitle = styled.View`
   align-items: center;
 `;
 
-export const ShoppingListItemName = styled.Text`
+export const ShoppingListItemName = styled.Text<ICheckedProps>`
   margin-top: 3px;
   font-family: ${({ theme }) => theme.fonts.medium};
   color: ${({ theme }) => theme.colors.cardTitle};
   font-size: 18px;
+  ${(props) =>
+    props.isChecked &&
+    css`
+      text-decoration: line-through;
+      color: ${({ theme }) => theme.colors.cardText};
+    `}
 `;
 
 export const ShoppingListItemDetail = styled.View`

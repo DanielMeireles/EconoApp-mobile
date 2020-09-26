@@ -179,7 +179,9 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
             value={isChecked}
             onChange={handleCheck}
           />
-          <ShoppingListItemName>{isItem.product?.name}</ShoppingListItemName>
+          <ShoppingListItemName isChecked={isItem.checked}>
+            {isItem.product?.name}
+          </ShoppingListItemName>
         </ShoppingListItemTitle>
         {!isOpened && (
           <Icon
@@ -264,7 +266,6 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
               infomações
             </Text>
           </ShoppingListQrCode>
-          <Button onPress={() => formRef.current?.submitForm()}>Salvar</Button>
         </>
       )}
     </ShoppingListItemContainer>
