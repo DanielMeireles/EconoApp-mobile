@@ -1,11 +1,6 @@
 import styled from 'styled-components/native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
-import { FlatList } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-
-import { ShoppingListItem } from '../../components/ShoppingListItemCard';
-
-import Button from '../../components/Button';
 
 export const Container = styled.View`
   flex: 1;
@@ -30,28 +25,17 @@ export const HeaderTitle = styled.Text`
 
 export const BackButton = styled.TouchableOpacity``;
 
-export const ShoppingListItems = styled(
-  FlatList as new () => FlatList<ShoppingListItem>,
-)`
-  padding: 10px 24px;
+export const Content = styled.ScrollView`
+  padding: 20px 20px;
 `;
 
-export const ShoppingListItemsTitle = styled.Text`
-  font-size: 24px;
-  margin-bottom: 10px;
-  color: ${({ theme }) => theme.colors.primaryText};
-  font-family: ${({ theme }) => theme.fonts.medium};
+export const ShoppingListImageButton = styled.TouchableOpacity`
+  margin-bottom: 20px;
 `;
 
-export const ContainerButton = styled.View`
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-`;
-
-export const AddButton = styled(Button)`
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
-  font-size: 50px;
+export const ShoppingListImage = styled.Image`
+  width: 120px;
+  height: 120px;
+  border-radius: 98px;
+  align-self: center;
 `;

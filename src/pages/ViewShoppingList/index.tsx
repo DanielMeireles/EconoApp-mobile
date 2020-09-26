@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { useRoute, RouteProp } from '@react-navigation/native';
 
 import { useTheme } from 'styled-components';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import {
   Container,
   Header,
@@ -30,6 +31,8 @@ type ParamList = {
 
 const ViewShoppingList: React.FC = () => {
   const theme = useTheme();
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   const route = useRoute<RouteProp<ParamList, 'shoppingList'>>();
 
@@ -67,10 +70,18 @@ const ViewShoppingList: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params.shoppingList, shoppingList.id]);
 
+  const navigateToCreateShoppingListItem = useCallback(() => {
+    navigation.navigate('CreateShoppingListItem');
+  }, [navigation]);
+
+  const handleGoBack = useCallback(() => {
+    navigation.navigate('Dashboard');
+  }, [navigation]);
+
   return (
     <Container>
       <Header>
-        <BackButton onPress={() => {}}>
+        <BackButton onPress={handleGoBack}>
           <Icon
             name="chevron-left"
             size={24}
@@ -91,7 +102,7 @@ const ViewShoppingList: React.FC = () => {
         )}
       />
       <ContainerButton>
-        <AddButton onPress={() => {}}>
+        <AddButton onPress={navigateToCreateShoppingListItem}>
           <Icon name="plus" size={24} color={theme.colors.buttonIcon} />
         </AddButton>
       </ContainerButton>
