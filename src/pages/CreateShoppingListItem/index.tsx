@@ -1,16 +1,14 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { format } from 'date-fns';
 import ImagePicker, { ImagePickerResponse } from 'react-native-image-picker';
 import FormData from 'form-data';
 import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup';
 
 import { useTheme } from 'styled-components';
-import { Platform, TextInput, Alert } from 'react-native';
+import { TextInput, Alert } from 'react-native';
 import {
   Container,
   Header,
@@ -36,18 +34,50 @@ interface ShoppingListItemFormData {
   description: string;
 }
 
+interface IProduct {
+  id: string;
+  name: string;
+  brand: string;
+  description: string;
+  image_url: string;
+}
+
 const CreateShoppingListItem: React.FC = () => {
   const theme = useTheme();
   const formRef = useRef<FormHandles>(null);
   const nameInputRef = useRef<TextInput>(null);
-  const dateInputRef = useRef<TextInput>(null);
+  const brandInputRef = useRef<TextInput>(null);
   const descriptionInputRef = useRef<TextInput>(null);
 
   const [image, setImage] = useState<ImagePickerResponse | null>(null);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isProducts, setIsProducts] = useState<IProduct[]>([]);
+  const [isProduct, setIsProduct] = useState<IProduct>({} as IProduct);
 
   const navigation = useNavigation();
+
+  const handleSearchProduct = useCallback((product_name: string) => {
+    api
+      .get(`/products/findByName/${product_name}`)
+      .then((response) => {
+        if (response.data) {
+          setIsProducts(response.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (isProducts[0]) {
+      const productAux = {} as IProduct;
+      Object.assign(productAux, {
+        name: isProducts[0].name,
+        brand: isProducts[0].brand,
+        description: isProducts[0].description,
+      });
+
+      setIsProduct(productAux);
+    }
+  }, [isProducts]);
 
   const handleNavigateSuccessPage = useCallback(() => {
     navigation.navigate('SuccessPage', {
@@ -61,21 +91,7 @@ const CreateShoppingListItem: React.FC = () => {
     navigation.goBack();
   }, [navigation]);
 
-  const handleToggleDatePicker = useCallback(() => {
-    setShowDatePicker((state) => !state);
-  }, []);
-
-  const handleDateChanged = useCallback((_, date: Date | undefined) => {
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false);
-    }
-
-    if (date) {
-      setSelectedDate(date);
-    }
-  }, []);
-
-  const handleUpdateShoppingListImage = useCallback(() => {
+  const handleUpdateImage = useCallback(() => {
     ImagePicker.showImagePicker(
       {
         title: 'Selecione uma imagem',
@@ -113,7 +129,6 @@ const CreateShoppingListItem: React.FC = () => {
         const shoppingList: ShoppingList = await api.post('/shoppinglists', {
           name: data.name,
           description: data.description,
-          date: selectedDate,
         });
 
         if (image) {
@@ -141,7 +156,7 @@ const CreateShoppingListItem: React.FC = () => {
         );
       }
     },
-    [image, handleNavigateSuccessPage, selectedDate],
+    [image, handleNavigateSuccessPage],
   );
 
   return (
@@ -159,7 +174,7 @@ const CreateShoppingListItem: React.FC = () => {
 
       <Content>
         {!useKeyboardStatus() && (
-          <ShoppingListImageButton onPress={handleUpdateShoppingListImage}>
+          <ShoppingListImageButton onPress={handleUpdateImage}>
             <ShoppingListImage
               source={{
                 uri: 'https://api.adorable.io/avatars/186/abott@adorable.png',
@@ -174,6 +189,10 @@ const CreateShoppingListItem: React.FC = () => {
             autoCapitalize="none"
             keyboardType="default"
             name="name"
+            onChangeText={(value) => {
+              handleSearchProduct(String(value));
+            }}
+            defaultValue={isProduct.name}
             placeholder="Nome"
             returnKeyType="next"
             onSubmitEditing={() => {
@@ -182,35 +201,28 @@ const CreateShoppingListItem: React.FC = () => {
           />
 
           <Input
-            ref={dateInputRef}
-            value={format(selectedDate, 'dd/MM/yyyy')}
+            ref={brandInputRef}
             autoCorrect={false}
             autoCapitalize="none"
             keyboardType="default"
-            name="date"
-            placeholder="Data"
+            name="brand"
+            defaultValue={isProduct.brand}
+            placeholder="Marca"
             returnKeyType="next"
-            onTouchStart={handleToggleDatePicker}
             onSubmitEditing={() => {
-              dateInputRef.current?.focus();
+              brandInputRef.current?.focus();
             }}
           />
-          {showDatePicker && (
-            <DateTimePicker
-              value={selectedDate}
-              onChange={handleDateChanged}
-              mode="date"
-              display="calendar"
-            />
-          )}
+
           <Input
             ref={descriptionInputRef}
             autoCorrect={false}
             autoCapitalize="none"
             keyboardType="default"
             name="description"
+            defaultValue={isProduct.description}
             placeholder="Descrição"
-            returnKeyType="send"
+            returnKeyType="next"
             onSubmitEditing={() => {
               descriptionInputRef.current?.focus();
             }}
