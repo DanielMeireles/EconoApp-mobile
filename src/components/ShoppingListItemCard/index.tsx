@@ -39,6 +39,7 @@ export interface ShoppingListItem {
   product_id: string;
   product?: Product;
   shoppinglist_id: string;
+  checked: boolean;
   date: Date;
   quantity: number;
   value: number;
@@ -68,7 +69,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
   const brandInputRef = useRef<TextInput>(null);
   const quantityInputRef = useRef<TextInput>(null);
   const valueInputRef = useRef<TextInput>(null);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(shoppingListItem.checked);
 
   const handleSaveShoppingListItem = useCallback(
     async (data: ShoppingListItemFormData) => {
@@ -82,16 +83,17 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
         });
 
         await schema.validate(data, { abortEarly: false });
+
         const productAux = {} as Product;
 
-        await Object.assign(productAux, {
+        Object.assign(productAux, {
           id: isItem.product?.id,
           name: isItem.product?.name,
           brand: isItem.product?.brand,
           description: isItem.product?.description,
         });
 
-        await Object.assign(productAux, {
+        Object.assign(productAux, {
           brand: data.brand,
         });
 
@@ -99,10 +101,11 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
 
         const shoppingListItemAux = {} as ShoppingListItem;
 
-        await Object.assign(shoppingListItemAux, {
+        Object.assign(shoppingListItemAux, {
           id: isItem.id,
           product_id: isItem.product_id,
           shoppinglist_id: isItem.shoppinglist_id,
+          checked: isChecked,
           date: isItem.date,
           quantity: isItem.quantity,
           value: isItem.value,
@@ -122,8 +125,6 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
         });
 
         setIsItem(shoppingListItemAux);
-
-        setIsOpened(!isOpened);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -138,8 +139,33 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
         );
       }
     },
-    [isItem, isOpened],
+    [isItem, isChecked],
   );
+
+  const handleCheck = useCallback(() => {
+    setIsChecked(!isChecked);
+    const shoppingListItemAux = {} as ShoppingListItem;
+
+    Object.assign(shoppingListItemAux, {
+      id: isItem.id,
+      product_id: isItem.product_id,
+      shoppinglist_id: isItem.shoppinglist_id,
+      checked: !isChecked,
+      date: isItem.date,
+      quantity: isItem.quantity,
+      value: isItem.value,
+      longitude: isItem.longitude,
+      latitude: isItem.latitude,
+    });
+
+    api.put('/shoppinglistitems', shoppingListItemAux);
+
+    Object.assign(shoppingListItemAux, {
+      product: isItem.product,
+    });
+
+    setIsItem(shoppingListItemAux);
+  }, [isChecked, isItem]);
 
   return (
     <ShoppingListItemContainer>
@@ -151,9 +177,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
               false: theme.colors.cardElement,
             }}
             value={isChecked}
-            onChange={() => {
-              setIsChecked(!isChecked);
-            }}
+            onChange={handleCheck}
           />
           <ShoppingListItemName>{isItem.product?.name}</ShoppingListItemName>
         </ShoppingListItemTitle>
@@ -187,6 +211,8 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
                 autoCapitalize="none"
                 keyboardType="default"
                 name="brand"
+                onEndEditing={() => formRef.current?.submitForm()}
+                ref={brandInputRef}
                 defaultValue={isItem.product?.brand}
                 placeholder="Marca"
                 returnKeyType="next"
@@ -200,6 +226,8 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
                   autoCapitalize="none"
                   keyboardType="number-pad"
                   name="quantity"
+                  onEndEditing={() => formRef.current?.submitForm()}
+                  ref={quantityInputRef}
                   defaultValue={String(isItem.quantity)}
                   placeholder="Quantidade"
                   returnKeyType="next"
@@ -212,6 +240,8 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
                   autoCapitalize="none"
                   keyboardType="decimal-pad"
                   name="value"
+                  onEndEditing={() => formRef.current?.submitForm()}
+                  ref={valueInputRef}
                   defaultValue={String(isItem.value)}
                   placeholder="Valor Unitário"
                   returnKeyType="next"
