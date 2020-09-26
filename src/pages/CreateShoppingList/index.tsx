@@ -50,7 +50,11 @@ const CreateShoppingList: React.FC = () => {
   const { navigate } = useNavigation();
 
   const navigateToCreateShoppingListComplete = useCallback(() => {
-    navigate('CreateShoppingListComplete');
+    navigate('SuccessPage', {
+      title: 'Lista criada com sucesso',
+      description: 'Agora você pode adicionar os itens que deseja nela',
+      goToPage: 'Dashboard',
+    });
   }, [navigate]);
 
   const navigateToDashboard = useCallback(() => {

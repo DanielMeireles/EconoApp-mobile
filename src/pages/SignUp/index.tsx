@@ -38,6 +38,14 @@ const SignUp: React.FC = () => {
 
   const navigation = useNavigation();
 
+  const handleNavigateSuccessPage = useCallback(() => {
+    navigation.navigate('SuccessPage', {
+      title: 'Cadastramento concluído',
+      description: 'Agora é só fazer seu login.',
+      goToPage: 'SignIn',
+    });
+  }, [navigation]);
+
   const handleSignUp = useCallback(
     async (data: SignUpFormData) => {
       try {
@@ -55,7 +63,7 @@ const SignUp: React.FC = () => {
 
         await api.post('/users', data);
 
-        navigation.navigate('SignUpComplete');
+        handleNavigateSuccessPage();
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -70,7 +78,7 @@ const SignUp: React.FC = () => {
         );
       }
     },
-    [navigation],
+    [handleNavigateSuccessPage],
   );
 
   return (

@@ -49,8 +49,12 @@ const CreateShoppingListItem: React.FC = () => {
 
   const navigation = useNavigation();
 
-  const navigateToCreateShoppingListItemComplete = useCallback(() => {
-    navigation.navigate('CreateShoppingListItemComplete');
+  const handleNavigateSuccessPage = useCallback(() => {
+    navigation.navigate('SuccessPage', {
+      title: 'Item criado com sucesso',
+      description: 'Seu novo item foi acrescentado a sua lista',
+      goToPage: 'ViewShoppingList',
+    });
   }, [navigation]);
 
   const handleGoBack = useCallback(() => {
@@ -123,7 +127,7 @@ const CreateShoppingListItem: React.FC = () => {
 
           await api.patch(`/shoppinglists/${shoppingList.id}/image`, dataImage);
         }
-        navigateToCreateShoppingListItemComplete();
+        handleNavigateSuccessPage();
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -137,7 +141,7 @@ const CreateShoppingListItem: React.FC = () => {
         );
       }
     },
-    [image, navigateToCreateShoppingListItemComplete, selectedDate],
+    [image, handleNavigateSuccessPage, selectedDate],
   );
 
   return (
