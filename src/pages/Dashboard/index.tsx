@@ -116,7 +116,9 @@ const Dashboard: React.FC = () => {
         )}
       />
       <ContainerButton>
-        <AddButton onPress={navigateToCreateShoppingList}>+</AddButton>
+        <AddButton onPress={navigateToCreateShoppingList}>
+          <Icon name="plus" size={24} color={theme.colors.buttonIcon} />
+        </AddButton>
       </ContainerButton>
     </Container>
   );

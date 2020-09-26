@@ -91,7 +91,9 @@ const ViewShoppingList: React.FC = () => {
         )}
       />
       <ContainerButton>
-        <AddButton onPress={() => {}}>+</AddButton>
+        <AddButton onPress={() => {}}>
+          <Icon name="plus" size={24} color={theme.colors.buttonIcon} />
+        </AddButton>
       </ContainerButton>
     </Container>
   );

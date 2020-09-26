@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
-import { TextInput, View } from 'react-native';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { TextInput, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
+import * as Yup from 'yup';
 
 import { useTheme } from 'styled-components';
 import {
@@ -19,8 +20,11 @@ import {
 } from './styles';
 
 import Input from '../Input';
+import Button from '../Button';
 
 import qrcodeImg from '../../assets/images/qr-code.png';
+import getValidationErrors from '../../utils/getValidationErrors';
+import api from '../../services/api';
 
 export interface Product {
   id: string;
@@ -46,10 +50,18 @@ interface IShoppingListItemProps {
   shoppingListItem: ShoppingListItem;
 }
 
+interface ShoppingListItemFormData {
+  brand: string;
+  quantity: string;
+  value: string;
+}
+
 const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
   shoppingListItem,
 }) => {
   const theme = useTheme();
+
+  const [isItem, setIsItem] = useState(shoppingListItem);
 
   const [isOpened, setIsOpened] = useState(false);
   const formRef = useRef<FormHandles>(null);
@@ -57,6 +69,77 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
   const quantityInputRef = useRef<TextInput>(null);
   const valueInputRef = useRef<TextInput>(null);
   const [isChecked, setIsChecked] = useState(false);
+
+  const handleSaveShoppingListItem = useCallback(
+    async (data: ShoppingListItemFormData) => {
+      try {
+        formRef.current?.setErrors({});
+
+        const schema = Yup.object().shape({
+          brand: Yup.string().required(),
+          quantity: Yup.number(),
+          value: Yup.number(),
+        });
+
+        await schema.validate(data, { abortEarly: false });
+        const productAux = {} as Product;
+
+        await Object.assign(productAux, {
+          id: isItem.product?.id,
+          name: isItem.product?.name,
+          brand: isItem.product?.brand,
+          description: isItem.product?.description,
+        });
+
+        await Object.assign(productAux, {
+          brand: data.brand,
+        });
+
+        await api.put('/products', productAux);
+
+        const shoppingListItemAux = {} as ShoppingListItem;
+
+        await Object.assign(shoppingListItemAux, {
+          id: isItem.id,
+          product_id: isItem.product_id,
+          shoppinglist_id: isItem.shoppinglist_id,
+          date: isItem.date,
+          quantity: isItem.quantity,
+          value: isItem.value,
+          longitude: isItem.longitude,
+          latitude: isItem.latitude,
+        });
+
+        await Object.assign(shoppingListItemAux, {
+          quantity: data.quantity,
+          value: data.value,
+        });
+
+        await api.put('/shoppinglistitems', shoppingListItemAux);
+
+        await Object.assign(shoppingListItemAux, {
+          product: productAux,
+        });
+
+        setIsItem(shoppingListItemAux);
+
+        setIsOpened(!isOpened);
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+          return;
+        }
+
+        Alert.alert(
+          'Erro na cadastro',
+          'Ocorreu um error ao fazer cadastro, tente novamente.',
+        );
+      }
+    },
+    [isItem, isOpened],
+  );
 
   return (
     <ShoppingListItemContainer>
@@ -72,9 +155,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
               setIsChecked(!isChecked);
             }}
           />
-          <ShoppingListItemName>
-            {shoppingListItem.product?.name}
-          </ShoppingListItemName>
+          <ShoppingListItemName>{isItem.product?.name}</ShoppingListItemName>
         </ShoppingListItemTitle>
         {!isOpened && (
           <Icon
@@ -99,13 +180,14 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
       </ShoppingListItemMain>
       {isOpened && (
         <>
-          <Form ref={formRef} onSubmit={() => {}}>
+          <Form ref={formRef} onSubmit={handleSaveShoppingListItem}>
             <ShoppingListItemDetail>
               <Input
                 autoCorrect={false}
                 autoCapitalize="none"
                 keyboardType="default"
                 name="brand"
+                defaultValue={isItem.product?.brand}
                 placeholder="Marca"
                 returnKeyType="next"
                 onSubmitEditing={() => {
@@ -118,6 +200,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
                   autoCapitalize="none"
                   keyboardType="number-pad"
                   name="quantity"
+                  defaultValue={String(isItem.quantity)}
                   placeholder="Quantidade"
                   returnKeyType="next"
                   onSubmitEditing={() => {
@@ -129,6 +212,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
                   autoCapitalize="none"
                   keyboardType="decimal-pad"
                   name="value"
+                  defaultValue={String(isItem.value)}
                   placeholder="Valor Unitário"
                   returnKeyType="next"
                   onSubmitEditing={() => {
@@ -150,6 +234,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
               infomações
             </Text>
           </ShoppingListQrCode>
+          <Button onPress={() => formRef.current?.submitForm()}>Salvar</Button>
         </>
       )}
     </ShoppingListItemContainer>
