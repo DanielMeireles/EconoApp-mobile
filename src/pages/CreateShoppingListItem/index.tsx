@@ -23,6 +23,7 @@ import api from '../../services/api';
 import useKeyboardStatus from '../../hooks/keyboardStatus';
 
 import Input from '../../components/Input';
+import InputAutocomplete from '../../components/InputAutocomplete';
 import Button from '../../components/Button';
 
 import { ShoppingList } from '../Dashboard';
@@ -209,18 +210,10 @@ const CreateShoppingListItem: React.FC = () => {
             }}
           />
 
-          <Input
-            ref={brandInputRef}
-            autoCorrect={false}
-            autoCapitalize="none"
-            keyboardType="default"
+          <InputAutocomplete
             name="brand"
-            defaultValue={isProduct.brand}
+            data={['Teste 1', 'Daniel']}
             placeholder="Marca"
-            returnKeyType="next"
-            onSubmitEditing={() => {
-              brandInputRef.current?.focus();
-            }}
           />
 
           <Input
