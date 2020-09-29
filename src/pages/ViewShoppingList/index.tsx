@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import {
+  useRoute,
+  RouteProp,
+  useNavigation,
+  useIsFocused,
+} from '@react-navigation/native';
 
 import { useTheme } from 'styled-components';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
 import {
   Container,
   Header,
@@ -51,7 +55,7 @@ const ViewShoppingList: React.FC = () => {
       const shoppingListItemsData: ShoppingListItem[] =
         shoppingListItemsResponse.data;
 
-      shoppingListItemsData.map(async (shoppingListItem) => {
+      await shoppingListItemsData.map(async (shoppingListItem) => {
         const productResponse = await api.get(
           `/products/findById/${shoppingListItem.product_id}`,
         );
@@ -71,8 +75,8 @@ const ViewShoppingList: React.FC = () => {
   }, [route.params.shoppingList, shoppingList.id]);
 
   const navigateToCreateShoppingListItem = useCallback(() => {
-    navigation.navigate('CreateShoppingListItem');
-  }, [navigation]);
+    navigation.navigate('CreateShoppingListItem', { shoppingList });
+  }, [navigation, shoppingList]);
 
   const handleGoBack = useCallback(() => {
     navigation.navigate('Dashboard');

@@ -6,6 +6,7 @@ import ImagePicker, { ImagePickerResponse } from 'react-native-image-picker';
 import FormData from 'form-data';
 import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup';
+import { useRoute, RouteProp } from '@react-navigation/native';
 
 import { useTheme } from 'styled-components';
 import { TextInput, Alert } from 'react-native';
@@ -28,9 +29,15 @@ import Button from '../../components/Button';
 import { ShoppingList } from '../Dashboard';
 import getValidationErrors from '../../utils/getValidationErrors';
 
-interface ShoppingListItemFormData {
+type ParamList = {
+  shoppingList: {
+    shoppingList: ShoppingList;
+  };
+};
+
+interface ProductFormData {
   name: string;
-  date: string;
+  brand: string;
   description: string;
 }
 
@@ -52,8 +59,15 @@ const CreateShoppingListItem: React.FC = () => {
   const [image, setImage] = useState<ImagePickerResponse | null>(null);
   const [isProducts, setIsProducts] = useState<IProduct[]>([]);
   const [isProduct, setIsProduct] = useState<IProduct>({} as IProduct);
+  const [isShoppingList, setIsShoppingList] = useState({} as ShoppingList);
+
+  const route = useRoute<RouteProp<ParamList, 'shoppingList'>>();
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    setIsShoppingList(route.params.shoppingList);
+  }, [route.params.shoppingList]);
 
   const handleSearchProductBrand = useCallback(
     (value: string) => {
@@ -77,6 +91,7 @@ const CreateShoppingListItem: React.FC = () => {
       .catch(() => {
         const productAux = {} as IProduct;
         Object.assign(productAux, {
+          id: '',
           name: product_name,
           brand: '',
           description: '',
@@ -121,33 +136,44 @@ const CreateShoppingListItem: React.FC = () => {
   }, []);
 
   const handleSubmit = useCallback(
-    async (data: ShoppingListItemFormData) => {
+    async (data: ProductFormData) => {
       try {
-        formRef.current?.setErrors({});
+        let product: IProduct = isProduct;
+        if (!product.id) {
+          formRef.current?.setErrors({});
 
-        const schema = Yup.object().shape({
-          name: Yup.string().required('Nome é obrigatório'),
-          description: Yup.string().required('Descrição é obrigatória'),
-        });
-
-        await schema.validate(data, { abortEarly: false });
-
-        const shoppingList: ShoppingList = await api.post('/shoppinglists', {
-          name: data.name,
-          description: data.description,
-        });
-
-        if (image) {
-          const dataImage: FormData = new FormData();
-
-          dataImage.append('image', {
-            type: 'image/jpeg',
-            name: `${shoppingList.id}.jpg`,
-            uri: image.uri,
+          const schema = Yup.object().shape({
+            name: Yup.string().required('Nome é obrigatório'),
+            brand: Yup.string(),
+            description: Yup.string(),
           });
 
-          await api.patch(`/shoppinglists/${shoppingList.id}/image`, dataImage);
+          await schema.validate(data, { abortEarly: false });
+
+          product = await api.post('/products', {
+            name: data.name,
+            brand: data.brand,
+            description: data.description,
+          });
+
+          if (image) {
+            const dataImage: FormData = new FormData();
+
+            dataImage.append('image', {
+              type: 'image/jpeg',
+              name: `${product.id}.jpg`,
+              uri: image.uri,
+            });
+
+            await api.patch(`/products/${product.id}/image`, dataImage);
+          }
         }
+
+        await api.post('/shoppinglistitems', {
+          product_id: product.id,
+          shoppinglist_id: isShoppingList.id,
+        });
+
         handleNavigateSuccessPage();
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -162,7 +188,7 @@ const CreateShoppingListItem: React.FC = () => {
         );
       }
     },
-    [image, handleNavigateSuccessPage],
+    [isProduct, isShoppingList.id, handleNavigateSuccessPage, image],
   );
 
   return (
