@@ -53,8 +53,24 @@ const CreateShoppingListItem: React.FC = () => {
   const [image, setImage] = useState<ImagePickerResponse | null>(null);
   const [isProducts, setIsProducts] = useState<IProduct[]>([]);
   const [isProduct, setIsProduct] = useState<IProduct>({} as IProduct);
+  const [isBrands, setIsBrands] = useState<string[]>([]);
 
   const navigation = useNavigation();
+
+  const handleAutosuggestion = useCallback(
+    (value: string) => {
+      const findProducts = isProducts.filter((product) =>
+        product.brand.includes(value),
+      );
+
+      const brands: string[] = [];
+
+      findProducts.map((product) => brands.push(product.brand));
+
+      setIsBrands(brands);
+    },
+    [isProducts],
+  );
 
   const handleSearchProduct = useCallback((product_name: string) => {
     api
@@ -211,9 +227,21 @@ const CreateShoppingListItem: React.FC = () => {
           />
 
           <InputAutocomplete
+            ref={brandInputRef}
+            autoCorrect={false}
+            autoCapitalize="none"
+            keyboardType="default"
             name="brand"
-            data={['Teste 1', 'Daniel']}
+            // defaultValue={isProduct.brand}
+            data={isBrands}
+            onChangeText={(value) => {
+              handleAutosuggestion(String(value));
+            }}
             placeholder="Marca"
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              brandInputRef.current?.focus();
+            }}
           />
 
           <Input
