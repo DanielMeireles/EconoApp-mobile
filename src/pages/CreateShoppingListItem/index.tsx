@@ -23,7 +23,6 @@ import api from '../../services/api';
 import useKeyboardStatus from '../../hooks/keyboardStatus';
 
 import Input from '../../components/Input';
-import InputAutocomplete from '../../components/InputAutocomplete';
 import Button from '../../components/Button';
 
 import { ShoppingList } from '../Dashboard';
@@ -53,21 +52,16 @@ const CreateShoppingListItem: React.FC = () => {
   const [image, setImage] = useState<ImagePickerResponse | null>(null);
   const [isProducts, setIsProducts] = useState<IProduct[]>([]);
   const [isProduct, setIsProduct] = useState<IProduct>({} as IProduct);
-  const [isBrands, setIsBrands] = useState<string[]>([]);
 
   const navigation = useNavigation();
 
-  const handleAutosuggestion = useCallback(
+  const handleSearchProductBrand = useCallback(
     (value: string) => {
-      const findProducts = isProducts.filter((product) =>
-        product.brand.includes(value),
-      );
+      const findProduct = isProducts.find((product) => product.brand === value);
 
-      const brands: string[] = [];
-
-      findProducts.map((product) => brands.push(product.brand));
-
-      setIsBrands(brands);
+      if (findProduct) {
+        setIsProduct(findProduct);
+      }
     },
     [isProducts],
   );
@@ -90,20 +84,6 @@ const CreateShoppingListItem: React.FC = () => {
         setIsProduct(productAux);
       });
   }, []);
-
-  useEffect(() => {
-    if (isProducts[0]) {
-      const productAux = {} as IProduct;
-
-      Object.assign(productAux, {
-        name: isProducts[0].name,
-        brand: isProducts[0].brand,
-        description: isProducts[0].description,
-      });
-
-      setIsProduct(productAux);
-    }
-  }, [isProducts]);
 
   const handleNavigateSuccessPage = useCallback(() => {
     navigation.navigate('SuccessPage', {
@@ -226,21 +206,20 @@ const CreateShoppingListItem: React.FC = () => {
             }}
           />
 
-          <InputAutocomplete
+          <Input
             ref={brandInputRef}
             autoCorrect={false}
             autoCapitalize="none"
             keyboardType="default"
             name="brand"
-            // defaultValue={isProduct.brand}
-            data={isBrands}
-            onChangeText={(value) => {
-              handleAutosuggestion(String(value));
-            }}
+            defaultValue={isProduct.brand}
             placeholder="Marca"
             returnKeyType="next"
             onSubmitEditing={() => {
               brandInputRef.current?.focus();
+            }}
+            onEndEditing={(value) => {
+              handleSearchProductBrand(value.nativeEvent.text);
             }}
           />
 
