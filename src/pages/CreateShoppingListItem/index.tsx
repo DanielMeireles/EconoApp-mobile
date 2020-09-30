@@ -138,8 +138,10 @@ const CreateShoppingListItem: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: ProductFormData) => {
       try {
-        let product: IProduct = isProduct;
-        if (!product.id) {
+        let product: IProduct = {} as IProduct;
+        if (product.id) {
+          product = isProduct;
+        } else {
           formRef.current?.setErrors({});
 
           const schema = Yup.object().shape({
@@ -150,11 +152,13 @@ const CreateShoppingListItem: React.FC = () => {
 
           await schema.validate(data, { abortEarly: false });
 
-          product = await api.post('/products', {
+          const response = await api.post('/products', {
             name: data.name,
             brand: data.brand,
             description: data.description,
           });
+
+          product = response.data;
 
           if (image) {
             const dataImage: FormData = new FormData();
@@ -221,8 +225,8 @@ const CreateShoppingListItem: React.FC = () => {
             autoCapitalize="none"
             keyboardType="default"
             name="name"
-            onChangeText={(value) => {
-              handleSearchProduct(String(value));
+            onEndEditing={(value) => {
+              handleSearchProduct(value.nativeEvent.text);
             }}
             defaultValue={isProduct.name}
             placeholder="Nome"

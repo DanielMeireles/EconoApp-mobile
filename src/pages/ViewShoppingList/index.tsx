@@ -49,30 +49,14 @@ const ViewShoppingList: React.FC = () => {
     setShoppingList(route.params.shoppingList);
     async function getShoppingListItems(): Promise<void> {
       const shoppingListItemsResponse = await api.get(
-        `/shoppinglistitems/findByShoppingListId/${shoppingList.id}`,
+        `/shoppinglistitems/findByShoppingListId/${route.params.shoppingList.id}`,
       );
 
-      const shoppingListItemsData: ShoppingListItem[] =
-        shoppingListItemsResponse.data;
-
-      await shoppingListItemsData.map(async (shoppingListItem) => {
-        const productResponse = await api.get(
-          `/products/findById/${shoppingListItem.product_id}`,
-        );
-
-        const product: Product = productResponse.data;
-
-        await Object.assign(shoppingListItem, {
-          product,
-        });
-
-        setShoppingListItems([...shoppingListItems, shoppingListItem]);
-      });
+      setShoppingListItems(shoppingListItemsResponse.data);
     }
 
     getShoppingListItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route.params.shoppingList, shoppingList.id]);
+  }, [isFocused, route.params.shoppingList]);
 
   const navigateToCreateShoppingListItem = useCallback(() => {
     navigation.navigate('CreateShoppingListItem', { shoppingList });
