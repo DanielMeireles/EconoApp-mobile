@@ -54,6 +54,7 @@ interface IShoppingListItemProps {
 
 interface ShoppingListItemFormData {
   brand: string;
+  description: string;
   quantity: string;
   value: string;
 }
@@ -68,6 +69,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
   const [isOpened, setIsOpened] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const brandInputRef = useRef<TextInput>(null);
+  const descriptionInputRef = useRef<TextInput>(null);
   const quantityInputRef = useRef<TextInput>(null);
   const valueInputRef = useRef<TextInput>(null);
   const [isChecked, setIsChecked] = useState(shoppingListItem.checked);
@@ -78,46 +80,62 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          brand: Yup.string().required(),
-          quantity: Yup.number(),
-          value: Yup.number(),
+          brand: Yup.string(),
+          description: Yup.string(),
+          quantity: Yup.number().nullable(),
+          value: Yup.number().nullable(),
         });
 
         await schema.validate(data, { abortEarly: false });
 
-        const productAux = {} as Product;
+        let productAux = {} as Product;
 
-        Object.assign(productAux, {
-          id: isItem.product?.id,
-          name: isItem.product?.name,
-          brand: isItem.product?.brand,
-          description: isItem.product?.description,
-        });
+        await api
+          .get('/products/findByNameAndBrand', {
+            params: {
+              name: shoppingListItem.product?.name,
+              brand: data.brand,
+            },
+          })
+          .then((response) => {
+            productAux = response.data;
+          })
+          .catch(() => {});
 
-        Object.assign(productAux, {
-          brand: data.brand,
-        });
+        if (!productAux.id) {
+          Object.assign(productAux, {
+            name: isItem.product?.name,
+            brand: data.brand,
+            description: data.description,
+          });
 
-        await api.put('/products', productAux);
+          const response = await api.post('/products', productAux);
+
+          productAux = response.data;
+        }
 
         const shoppingListItemAux = {} as ShoppingListItem;
 
         Object.assign(shoppingListItemAux, {
           id: isItem.id,
-          product_id: isItem.product_id,
+          product_id: productAux.id,
           shoppinglist_id: isItem.shoppinglist_id,
           checked: isChecked,
-          date: isItem.date,
           quantity: isItem.quantity,
           value: isItem.value,
-          longitude: isItem.longitude,
-          latitude: isItem.latitude,
         });
 
-        await Object.assign(shoppingListItemAux, {
-          quantity: data.quantity,
-          value: data.value,
-        });
+        if (data.quantity) {
+          Object.assign(shoppingListItemAux, {
+            quantity: data.quantity,
+          });
+        }
+
+        if (data.value) {
+          Object.assign(shoppingListItemAux, {
+            value: data.value,
+          });
+        }
 
         await api.put('/shoppinglistitems', shoppingListItemAux);
 
@@ -131,16 +149,10 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
           const errors = getValidationErrors(err);
 
           formRef.current?.setErrors(errors);
-          return;
         }
-
-        Alert.alert(
-          'Erro na cadastro',
-          'Ocorreu um error ao fazer cadastro, tente novamente.',
-        );
       }
     },
-    [isItem, isChecked],
+    [shoppingListItem, isItem, isChecked],
   );
 
   const handleCheck = useCallback(() => {
@@ -152,17 +164,14 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
       product_id: isItem.product_id,
       shoppinglist_id: isItem.shoppinglist_id,
       checked: !isChecked,
-      date: isItem.date,
-      quantity: isItem.quantity,
-      value: isItem.value,
-      longitude: isItem.longitude,
-      latitude: isItem.latitude,
     });
 
     api.put('/shoppinglistitems', shoppingListItemAux);
 
     Object.assign(shoppingListItemAux, {
       product: isItem.product,
+      quantity: isItem.quantity,
+      value: isItem.value,
     });
 
     setIsItem(shoppingListItemAux);
@@ -221,6 +230,20 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
                 returnKeyType="next"
                 onSubmitEditing={() => {
                   brandInputRef.current?.focus();
+                }}
+              />
+              <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                keyboardType="default"
+                name="description"
+                onEndEditing={() => formRef.current?.submitForm()}
+                ref={descriptionInputRef}
+                defaultValue={isItem.product?.description}
+                placeholder="Descrição"
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  descriptionInputRef.current?.focus();
                 }}
               />
               <ShoppingListItemSecondaryDetail>

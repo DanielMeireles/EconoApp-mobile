@@ -20,7 +20,6 @@ import {
 } from './styles';
 
 import ShoppingListItemCard, {
-  Product,
   ShoppingListItem,
 } from '../../components/ShoppingListItemCard';
 
@@ -49,7 +48,8 @@ const ViewShoppingList: React.FC = () => {
     setShoppingList(route.params.shoppingList);
     async function getShoppingListItems(): Promise<void> {
       const shoppingListItemsResponse = await api.get(
-        `/shoppinglistitems/findByShoppingListId/${route.params.shoppingList.id}`,
+        `/shoppinglistitems/findByShoppingListId`,
+        { params: { shoppinglist_id: route.params.shoppingList.id } },
       );
 
       setShoppingListItems(shoppingListItemsResponse.data);
