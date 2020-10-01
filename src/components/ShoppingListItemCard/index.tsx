@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { TextInput, Alert } from 'react-native';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
@@ -19,6 +19,8 @@ import {
   CheckBoxButton,
   InputLeft,
   InputRight,
+  ShoppingListItemsValue,
+  ShoppingListIconValueContainer,
 } from './styles';
 
 import Input from '../Input';
@@ -73,6 +75,15 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
   const quantityInputRef = useRef<TextInput>(null);
   const valueInputRef = useRef<TextInput>(null);
   const [isChecked, setIsChecked] = useState(shoppingListItem.checked);
+  const [isValue, setIsValue] = useState(0.0);
+
+  useEffect(() => {
+    if (isItem.quantity > 0 && isItem.value > 0) {
+      setIsValue(isItem.quantity * isItem.value);
+    } else {
+      setIsValue(0.0);
+    }
+  }, [isItem]);
 
   const handleSaveShoppingListItem = useCallback(
     async (data: ShoppingListItemFormData) => {
@@ -189,30 +200,38 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
             value={isChecked}
             onChange={handleCheck}
           />
-          <ShoppingListItemName isChecked={isItem.checked}>
+          <ShoppingListItemName
+            isChecked={isItem.checked}
+            onPress={() => {
+              setIsOpened(!isOpened);
+            }}
+          >
             {isItem.product?.name}
           </ShoppingListItemName>
         </ShoppingListItemTitle>
-        {!isOpened && (
-          <Icon
-            onPress={() => {
-              setIsOpened(!isOpened);
-            }}
-            name="chevron-down"
-            size={24}
-            color={theme.colors.headerElement}
-          />
-        )}
-        {isOpened && (
-          <Icon
-            onPress={() => {
-              setIsOpened(!isOpened);
-            }}
-            name="chevron-up"
-            size={24}
-            color={theme.colors.headerElement}
-          />
-        )}
+        <ShoppingListIconValueContainer>
+          <ShoppingListItemsValue>{isValue.toFixed(2)}</ShoppingListItemsValue>
+          {!isOpened && (
+            <Icon
+              onPress={() => {
+                setIsOpened(!isOpened);
+              }}
+              name="chevron-down"
+              size={24}
+              color={theme.colors.headerElement}
+            />
+          )}
+          {isOpened && (
+            <Icon
+              onPress={() => {
+                setIsOpened(!isOpened);
+              }}
+              name="chevron-up"
+              size={24}
+              color={theme.colors.headerElement}
+            />
+          )}
+        </ShoppingListIconValueContainer>
       </ShoppingListItemMain>
       {isOpened && (
         <>

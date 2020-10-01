@@ -17,7 +17,7 @@ export const ShoppingListItemContainer = styled.View`
   background: ${({ theme }) => theme.colors.cardBackground};
   border-radius: 10px;
   padding: 20px 10px 20px 10px;
-  margin-bottom: 16px;
+  margin-bottom: 15px;
   flex-direction: column;
   align-items: center;
 `;
@@ -27,6 +27,18 @@ export const ShoppingListItemMain = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+`;
+
+export const ShoppingListIconValueContainer = styled.View`
+  flex-direction: row;
+`;
+
+export const ShoppingListItemsValue = styled.Text`
+  margin-top: 3px;
+  margin-right: 10px;
+  font-family: ${({ theme }) => theme.fonts.medium};
+  color: ${({ theme }) => theme.colors.cardElement};
+  font-size: 15px;
 `;
 
 export const CheckBoxButton = styled(CheckBox)`

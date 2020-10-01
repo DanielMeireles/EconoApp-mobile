@@ -55,3 +55,15 @@ export const AddButton = styled(Button)`
   border-radius: 30px;
   font-size: 50px;
 `;
+
+export const TextTotalValueContainer = styled.View`
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+`;
+
+export const TextTotalValue = styled.Text`
+  color: ${({ theme }) => theme.colors.headerSecondaryText};
+  font-size: 25px;
+  font-family: ${({ theme }) => theme.fonts.regular};
+`;

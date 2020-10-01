@@ -17,6 +17,8 @@ import {
   ShoppingListItemsTitle,
   ContainerButton,
   AddButton,
+  TextTotalValueContainer,
+  TextTotalValue,
 } from './styles';
 
 import ShoppingListItemCard, {
@@ -44,19 +46,37 @@ const ViewShoppingList: React.FC = () => {
     ShoppingListItem[]
   >([]);
 
+  const [isValue, setIsValue] = useState(0.0);
+
+  const handleTotalValue = useCallback(() => {
+    let totalValue = 0;
+
+    shoppingListItems.map(async (shoppingListItem) => {
+      if (shoppingListItem.quantity > 0 && shoppingListItem.value > 0) {
+        totalValue += shoppingListItem.quantity * shoppingListItem.value;
+      }
+    });
+
+    setIsValue(totalValue);
+  }, [shoppingListItems]);
+
+  async function getShoppingListItems(): Promise<void> {
+    const shoppingListItemsResponse = await api.get(
+      `/shoppinglistitems/findByShoppingListId`,
+      { params: { shoppinglist_id: route.params.shoppingList.id } },
+    );
+
+    setShoppingListItems(shoppingListItemsResponse.data);
+  }
+
   useEffect(() => {
     setShoppingList(route.params.shoppingList);
-    async function getShoppingListItems(): Promise<void> {
-      const shoppingListItemsResponse = await api.get(
-        `/shoppinglistitems/findByShoppingListId`,
-        { params: { shoppinglist_id: route.params.shoppingList.id } },
-      );
-
-      setShoppingListItems(shoppingListItemsResponse.data);
-    }
-
     getShoppingListItems();
-  }, [isFocused, route.params.shoppingList]);
+  }, [isFocused]);
+
+  useEffect(() => {
+    handleTotalValue();
+  }, [shoppingListItems]);
 
   const navigateToCreateShoppingListItem = useCallback(() => {
     navigation.navigate('CreateShoppingListItem', { shoppingList });
@@ -80,6 +100,7 @@ const ViewShoppingList: React.FC = () => {
       </Header>
 
       <ShoppingListItems
+        onTouchEnd={getShoppingListItems}
         data={shoppingListItems}
         keyExtractor={(shoppingListItem) => shoppingListItem.id}
         ListHeaderComponent={
@@ -94,6 +115,9 @@ const ViewShoppingList: React.FC = () => {
           <Icon name="plus" size={24} color={theme.colors.buttonIcon} />
         </AddButton>
       </ContainerButton>
+      <TextTotalValueContainer>
+        <TextTotalValue>R$ {isValue.toFixed(2)}</TextTotalValue>
+      </TextTotalValueContainer>
     </Container>
   );
 };
