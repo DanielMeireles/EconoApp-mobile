@@ -40,7 +40,7 @@ export interface Product {
 export interface ShoppingListItem {
   id: string;
   product_id: string;
-  product?: Product;
+  product: Product;
   shoppinglist_id: string;
   checked: boolean;
   date: Date;

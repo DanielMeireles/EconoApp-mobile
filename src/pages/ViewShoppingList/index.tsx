@@ -61,12 +61,20 @@ const ViewShoppingList: React.FC = () => {
   }, [shoppingListItems]);
 
   async function getShoppingListItems(): Promise<void> {
-    const shoppingListItemsResponse = await api.get(
-      `/shoppinglistitems/findByShoppingListId`,
-      { params: { shoppinglist_id: route.params.shoppingList.id } },
-    );
+    const response = await api.get(`/shoppinglistitems/findByShoppingListId`, {
+      params: { shoppinglist_id: route.params.shoppingList.id },
+    });
 
-    setShoppingListItems(shoppingListItemsResponse.data);
+    const shoppingListItemsResponse: ShoppingListItem[] = response.data;
+
+    setShoppingListItems(
+      shoppingListItemsResponse.sort((a, b) => {
+        if (a.product.name > b.product.name) {
+          return 1;
+        }
+        return -1;
+      }),
+    );
   }
 
   useEffect(() => {

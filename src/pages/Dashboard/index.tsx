@@ -52,7 +52,15 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     api.get('/shoppinglists').then((response) => {
-      setShoppingLists(response.data);
+      const shoppingListsResponse: ShoppingList[] = response.data;
+      setShoppingLists(
+        shoppingListsResponse.sort((a, b) => {
+          if (a.date > b.date) {
+            return 1;
+          }
+          return -1;
+        }),
+      );
     });
   }, [isFocused]);
 
