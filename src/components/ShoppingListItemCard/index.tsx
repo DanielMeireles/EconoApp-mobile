@@ -189,11 +189,15 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
     setIsChecked(!isChecked);
     const shoppingListItemAux = {} as ShoppingListItem;
 
+    getPosition();
+
     Object.assign(shoppingListItemAux, {
       id: isItem.id,
       product_id: isItem.product_id,
       shoppinglist_id: isItem.shoppinglist_id,
       checked: !isChecked,
+      latitude: isPosition.latitude,
+      longitude: isPosition.longitude,
     });
 
     api.put('/shoppinglistitems', shoppingListItemAux);
@@ -205,7 +209,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
     });
 
     setIsItem(shoppingListItemAux);
-  }, [isChecked, isItem]);
+  }, [getPosition, isChecked, isItem, isPosition]);
 
   return (
     <ShoppingListItemContainer>
