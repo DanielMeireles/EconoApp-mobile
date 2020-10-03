@@ -82,7 +82,6 @@ export const ShoppingListName = styled.Text`
 export const ShoppingListMeta = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-top: 8px;
 `;
 
 export const ShoppingListMetaText = styled.Text`

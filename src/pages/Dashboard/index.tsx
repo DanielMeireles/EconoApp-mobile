@@ -119,6 +119,13 @@ const Dashboard: React.FC = () => {
                   {format(new Date(shoppingList.date), 'dd/MM/yyyy')}
                 </ShoppingListMetaText>
               </ShoppingListMeta>
+
+              <ShoppingListMeta>
+                <Icon name="info" size={14} color={theme.colors.cardElement} />
+                <ShoppingListMetaText>
+                  {shoppingList.description}
+                </ShoppingListMetaText>
+              </ShoppingListMeta>
             </ShoppingListInfo>
           </ShoppingListContainer>
         )}

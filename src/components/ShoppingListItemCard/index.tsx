@@ -169,7 +169,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
 
         await api.put('/shoppinglistitems', shoppingListItemAux);
 
-        await Object.assign(shoppingListItemAux, {
+        Object.assign(shoppingListItemAux, {
           product: productAux,
         });
 

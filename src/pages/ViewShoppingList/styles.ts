@@ -59,11 +59,13 @@ export const AddButton = styled(Button)`
 export const TextTotalValueContainer = styled.View`
   align-items: center;
   justify-content: center;
-  height: 60px;
+  height: 45px;
+  background: ${({ theme }) => theme.colors.headerBackground};
 `;
 
 export const TextTotalValue = styled.Text`
   color: ${({ theme }) => theme.colors.headerSecondaryText};
   font-size: 25px;
   font-family: ${({ theme }) => theme.fonts.regular};
+  margin-top: 5px;
 `;

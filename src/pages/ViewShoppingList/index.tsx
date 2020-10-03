@@ -118,14 +118,15 @@ const ViewShoppingList: React.FC = () => {
           <ShoppingListItemCard shoppingListItem={shoppingListItem} />
         )}
       />
+
+      <TextTotalValueContainer>
+        <TextTotalValue>R$ {isValue.toFixed(2)}</TextTotalValue>
+      </TextTotalValueContainer>
       <ContainerButton>
         <AddButton onPress={navigateToCreateShoppingListItem}>
           <Icon name="plus" size={24} color={theme.colors.buttonIcon} />
         </AddButton>
       </ContainerButton>
-      <TextTotalValueContainer>
-        <TextTotalValue>R$ {isValue.toFixed(2)}</TextTotalValue>
-      </TextTotalValueContainer>
     </Container>
   );
 };
