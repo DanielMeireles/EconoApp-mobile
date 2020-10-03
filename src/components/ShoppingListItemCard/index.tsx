@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 import * as Yup from 'yup';
+import Geolocation from '@react-native-community/geolocation';
 
 import { useTheme } from 'styled-components';
 import {
@@ -77,6 +78,10 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
   const valueInputRef = useRef<TextInput>(null);
   const [isChecked, setIsChecked] = useState(shoppingListItem.checked);
   const [isValue, setIsValue] = useState(0.0);
+  const [isPosition, setIsPosition] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
 
   useEffect(() => {
     if (isItem.quantity > 0 && isItem.value > 0) {
@@ -85,6 +90,15 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
       setIsValue(0.0);
     }
   }, [isItem]);
+
+  const getPosition = useCallback(() => {
+    Geolocation.getCurrentPosition((pos) => {
+      setIsPosition({
+        latitude: pos.coords.latitude,
+        longitude: pos.coords.longitude,
+      });
+    });
+  }, []);
 
   const handleSaveShoppingListItem = useCallback(
     async (data: ShoppingListItemFormData) => {
@@ -128,6 +142,8 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
 
         const shoppingListItemAux = {} as ShoppingListItem;
 
+        getPosition();
+
         Object.assign(shoppingListItemAux, {
           id: isItem.id,
           product_id: productAux.id,
@@ -135,6 +151,8 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
           checked: isChecked,
           quantity: isItem.quantity,
           value: isItem.value,
+          latitude: isPosition.latitude,
+          longitude: isPosition.longitude,
         });
 
         if (data.quantity) {
@@ -164,7 +182,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
         }
       }
     },
-    [shoppingListItem, isItem, isChecked],
+    [shoppingListItem.product.name, getPosition, isItem, isChecked, isPosition],
   );
 
   const handleCheck = useCallback(() => {
