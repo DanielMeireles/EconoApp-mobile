@@ -80,10 +80,12 @@ const ViewShoppingList: React.FC = () => {
   useEffect(() => {
     setShoppingList(route.params.shoppingList);
     getShoppingListItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   useEffect(() => {
     handleTotalValue();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shoppingListItems]);
 
   const navigateToCreateShoppingListItem = useCallback(() => {

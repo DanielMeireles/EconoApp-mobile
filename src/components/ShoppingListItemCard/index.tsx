@@ -6,6 +6,8 @@ import { Form } from '@unform/mobile';
 import * as Yup from 'yup';
 import Geolocation from '@react-native-community/geolocation';
 
+import { useNavigation } from '@react-navigation/native';
+
 import { useTheme } from 'styled-components';
 import {
   ShoppingListItemContainer,
@@ -82,6 +84,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
     latitude: 0,
     longitude: 0,
   });
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (isItem.quantity > 0 && isItem.value > 0) {
@@ -323,7 +326,11 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
               </ShoppingListItemSecondaryDetail>
             </ShoppingListItemDetail>
           </Form>
-          <ShoppingListQrCode>
+          <ShoppingListQrCode
+            onPress={() => {
+              navigation.navigate('QRCodeScreen');
+            }}
+          >
             <Image
               source={qrcodeImg}
               style={{
