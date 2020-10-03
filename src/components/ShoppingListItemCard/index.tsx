@@ -21,6 +21,7 @@ import {
   InputRight,
   ShoppingListItemsValue,
   ShoppingListIconValueContainer,
+  Label,
 } from './styles';
 
 import Input from '../Input';
@@ -200,12 +201,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
             value={isChecked}
             onChange={handleCheck}
           />
-          <ShoppingListItemName
-            isChecked={isItem.checked}
-            onPress={() => {
-              setIsOpened(!isOpened);
-            }}
-          >
+          <ShoppingListItemName isChecked={isItem.checked}>
             {isItem.product?.name}
           </ShoppingListItemName>
         </ShoppingListItemTitle>
@@ -237,6 +233,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
         <>
           <Form ref={formRef} onSubmit={handleSaveShoppingListItem}>
             <ShoppingListItemDetail>
+              <Label>Marca</Label>
               <Input
                 autoCorrect={false}
                 autoCapitalize="none"
@@ -251,6 +248,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
                   brandInputRef.current?.focus();
                 }}
               />
+              <Label>Descrição</Label>
               <Input
                 autoCorrect={false}
                 autoCapitalize="none"
@@ -267,6 +265,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
               />
               <ShoppingListItemSecondaryDetail>
                 <InputLeft>
+                  <Label>Quantidade</Label>
                   <Input
                     autoCorrect={false}
                     autoCapitalize="none"
@@ -283,6 +282,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
                   />
                 </InputLeft>
                 <InputRight>
+                  <Label>Valor</Label>
                   <Input
                     autoCorrect={false}
                     autoCapitalize="none"

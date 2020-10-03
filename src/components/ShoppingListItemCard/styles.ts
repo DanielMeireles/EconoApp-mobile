@@ -109,3 +109,10 @@ export const InputRight = styled.View`
   width: 97.5%;
   margin-left: 4px;
 `;
+
+export const Label = styled.Text`
+  color: ${({ theme }) => theme.colors.secondaryText};
+  font-size: 15px;
+  font-family: ${({ theme }) => theme.fonts.regular};
+  margin-left: 5px;
+`;

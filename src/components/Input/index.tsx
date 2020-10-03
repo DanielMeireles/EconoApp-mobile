@@ -37,6 +37,7 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
 
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
+  const [isDefaultValue, setIsDefaultValue] = useState('');
 
   const handleInputFocus = useCallback(() => {
     setIsFocused(true);
@@ -47,6 +48,12 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
 
     setIsFilled(!!inputValueRef.current.value);
   }, []);
+
+  useEffect(() => {
+    if (defaultValue && defaultValue !== 'null') {
+      setIsDefaultValue(defaultValue);
+    }
+  }, [defaultValue]);
 
   useImperativeHandle(ref, () => ({
     focus() {
@@ -78,7 +85,7 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
       <TextInput
         ref={inputElementRef}
         keyboardAppearance="dark"
-        defaultValue={defaultValue}
+        defaultValue={isDefaultValue}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
         onChangeText={(value) => {
