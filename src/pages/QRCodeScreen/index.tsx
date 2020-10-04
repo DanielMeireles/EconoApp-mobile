@@ -1,49 +1,38 @@
-import React, { Component } from 'react';
-
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Linking,
-} from 'react-native';
-
-import QRCodeScanner, { Event } from 'react-native-qrcode-scanner';
+import React, { useState, useCallback } from 'react';
+import { Event } from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
+import Icon from 'react-native-vector-icons/Entypo';
+import { useTheme } from 'styled-components';
+
+import { Container, Scanner, ContainerButton, AddButton } from './styles';
 
 const QRCodeScreen: React.FC = () => {
+  const theme = useTheme();
+
+  const [isTorch, setIsTorch] = useState(RNCamera.Constants.FlashMode.off);
+
+  const handleTorch = useCallback(() => {
+    if (isTorch === RNCamera.Constants.FlashMode.off) {
+      setIsTorch(RNCamera.Constants.FlashMode.torch);
+    } else {
+      setIsTorch(RNCamera.Constants.FlashMode.off);
+    }
+  }, [isTorch]);
+
   const onSuccess = (e: Event): void => {
     console.log(e.data);
   };
 
   return (
-    <QRCodeScanner
-      onRead={onSuccess}
-      // flashMode={RNCamera.Constants.FlashMode.torch}
-      topContent={<Text style={styles.centerText}>Teste</Text>}
-      bottomContent={<TouchableOpacity style={styles.buttonTouchable} />}
-    />
+    <Container>
+      <Scanner onRead={onSuccess} cameraProps={{ flashMode: isTorch }} />
+      <ContainerButton>
+        <AddButton onPress={handleTorch}>
+          <Icon name="flash" size={24} color={theme.colors.buttonIcon} />
+        </AddButton>
+      </ContainerButton>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  centerText: {
-    flex: 1,
-    fontSize: 18,
-    padding: 32,
-    color: '#777',
-  },
-  textBold: {
-    fontWeight: '500',
-    color: '#000',
-  },
-  buttonText: {
-    fontSize: 21,
-    color: 'rgb(0,122,255)',
-  },
-  buttonTouchable: {
-    padding: 16,
-  },
-});
 
 export default QRCodeScreen;
