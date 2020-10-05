@@ -78,6 +78,7 @@ const ViewShoppingList: React.FC = () => {
   }
 
   useEffect(() => {
+    setShoppingListItems([]);
     setShoppingList(route.params.shoppingList);
     getShoppingListItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
