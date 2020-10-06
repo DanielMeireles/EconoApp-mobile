@@ -77,7 +77,7 @@ const Dashboard: React.FC = () => {
       <Header>
         <HeaderTitle>
           Bem vindo,{'\n'}
-          <UserName>{user.name}</UserName>
+          <UserName onPress={navigateToProfile}>{user.name}</UserName>
         </HeaderTitle>
         <ProfileButton onPress={navigateToProfile}>
           <UserAvatar
