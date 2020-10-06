@@ -328,7 +328,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
           </Form>
           <ShoppingListQrCode
             onPress={() => {
-              navigation.navigate('QRCodeScreen', { shoppingListItem });
+              navigation.navigate('QRCode', { shoppingListItem });
             }}
           >
             <Image

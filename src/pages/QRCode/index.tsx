@@ -26,7 +26,7 @@ interface IQRCode {
   longitude: number;
 }
 
-const QRCodeScreen: React.FC = () => {
+const QRCode: React.FC = () => {
   const theme = useTheme();
   const navigation = useNavigation();
 
@@ -93,4 +93,4 @@ const QRCodeScreen: React.FC = () => {
   );
 };
 
-export default QRCodeScreen;
+export default QRCode;
