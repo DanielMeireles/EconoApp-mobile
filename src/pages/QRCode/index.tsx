@@ -5,8 +5,16 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { useTheme } from 'styled-components';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 
-import { Alert } from 'react-native';
-import { Container, Scanner, ContainerButton, AddButton } from './styles';
+import { Alert, Dimensions } from 'react-native';
+import {
+  Container,
+  Scanner,
+  ContainerButton,
+  AddButton,
+  Header,
+  HeaderTitle,
+  BackButton,
+} from './styles';
 
 import api from '../../services/api';
 
@@ -81,9 +89,31 @@ const QRCode: React.FC = () => {
     navigation.goBack();
   };
 
+  const handleGoBack = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+
   return (
     <Container>
-      <Scanner onRead={onSuccess} cameraProps={{ flashMode: isTorch }} />
+      <Header>
+        <BackButton onPress={handleGoBack}>
+          <Icon
+            name="chevron-left"
+            size={24}
+            color={theme.colors.headerElement}
+          />
+        </BackButton>
+        <HeaderTitle>QRCode</HeaderTitle>
+      </Header>
+      <Scanner
+        onRead={onSuccess}
+        cameraProps={{ flashMode: isTorch }}
+        cameraStyle={{
+          marginTop: -165,
+          height: Dimensions.get('screen').height - 105,
+          width: Dimensions.get('screen').width,
+        }}
+      />
       <ContainerButton>
         <AddButton onPress={handleTorch}>
           <Icon name="flash" size={24} color={theme.colors.buttonIcon} />
