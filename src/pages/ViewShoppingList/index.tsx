@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
+import IconEntypo from 'react-native-vector-icons/Entypo';
 import {
   useRoute,
   RouteProp,
@@ -17,6 +18,7 @@ import {
   ShoppingListItemsTitle,
   ContainerButton,
   AddButton,
+  BestPlaceButton,
   TextTotalValueContainer,
   TextTotalValue,
 } from './styles';
@@ -89,6 +91,15 @@ const ViewShoppingList: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shoppingListItems]);
 
+  const handleBestPlace = useCallback(() => {
+    navigation.navigate('Map', {
+      coordenate: {
+        latitude: -21.76417,
+        longitude: -43.35028,
+      },
+    });
+  }, [navigation]);
+
   const navigateToCreateShoppingListItem = useCallback(() => {
     navigation.navigate('CreateShoppingListItem', { shoppingList });
   }, [navigation, shoppingList]);
@@ -126,6 +137,9 @@ const ViewShoppingList: React.FC = () => {
         <TextTotalValue>R$ {isValue.toFixed(2)}</TextTotalValue>
       </TextTotalValueContainer>
       <ContainerButton>
+        <BestPlaceButton onPress={handleBestPlace}>
+          <IconEntypo name="credit" size={24} color={theme.colors.buttonIcon} />
+        </BestPlaceButton>
         <AddButton onPress={navigateToCreateShoppingListItem}>
           <Icon name="plus" size={24} color={theme.colors.buttonIcon} />
         </AddButton>

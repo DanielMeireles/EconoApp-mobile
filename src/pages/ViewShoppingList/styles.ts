@@ -45,22 +45,32 @@ export const ShoppingListItemsTitle = styled.Text`
 
 export const ContainerButton = styled.View`
   position: absolute;
-  bottom: 15px;
-  right: 15px;
+  width: 100%;
+  bottom: 10px;
+  padding: 0 10px 0 10px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const AddButton = styled(Button)`
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
-  font-size: 50px;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+`;
+
+export const BestPlaceButton = styled(Button)`
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
 `;
 
 export const TextTotalValueContainer = styled.View`
   align-items: center;
   justify-content: center;
-  height: 45px;
+  height: 70px;
   background: ${({ theme }) => theme.colors.headerBackground};
+  border-radius: 70px;
 `;
 
 export const TextTotalValue = styled.Text`

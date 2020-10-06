@@ -93,13 +93,13 @@ export const ShoppingListMetaText = styled.Text`
 
 export const ContainerButton = styled.View`
   position: absolute;
-  bottom: 15px;
-  right: 15px;
+  bottom: 10px;
+  right: 10px;
 `;
 
 export const AddButton = styled(Button)`
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
   font-size: 50px;
 `;

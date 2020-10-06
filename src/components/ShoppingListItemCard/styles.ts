@@ -17,7 +17,7 @@ export const ShoppingListItemContainer = styled.View`
   background: ${({ theme }) => theme.colors.cardBackground};
   border-radius: 10px;
   padding: 20px 10px 20px 10px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   flex-direction: column;
   align-items: center;
 `;
