@@ -14,6 +14,8 @@ target 'EconoApp' do
 
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
   target 'EconoAppTests' do
     inherit! :complete
     # Pods for testing
