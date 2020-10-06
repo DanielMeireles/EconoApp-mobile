@@ -10,6 +10,7 @@ import ViewShoppingList from '../pages/ViewShoppingList';
 import CreateShoppingListItem from '../pages/CreateShoppingListItem';
 import SuccessPage from '../pages/SuccessPage';
 import QRCode from '../pages/QRCode';
+import Map from '../pages/Map';
 
 const App = createStackNavigator();
 
@@ -30,6 +31,7 @@ const AppRoutes: React.FC = () => (
     />
     <App.Screen name="SuccessPage" component={SuccessPage} />
     <App.Screen name="QRCode" component={QRCode} />
+    <App.Screen name="Map" component={Map} />
   </App.Navigator>
 );
 
