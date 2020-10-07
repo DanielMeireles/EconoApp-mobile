@@ -149,6 +149,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
 
         Object.assign(shoppingListItemAux, {
           id: isItem.id,
+          date: new Date(),
           product_id: productAux.id,
           shoppinglist_id: isItem.shoppinglist_id,
           checked: isChecked,
@@ -196,6 +197,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
 
     Object.assign(shoppingListItemAux, {
       id: isItem.id,
+      date: new Date(),
       product_id: isItem.product_id,
       shoppinglist_id: isItem.shoppinglist_id,
       checked: !isChecked,
