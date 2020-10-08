@@ -82,13 +82,13 @@ const CreateShoppingListItem: React.FC = () => {
 
   const handleSearchProduct = useCallback((product_name: string) => {
     api
-      .get(`/products/findByName/${product_name}`)
+      .get('/products/findByName', { params: { name: product_name } })
       .then((response) => {
         if (response.data) {
           setIsProducts(response.data);
         }
       })
-      .catch(() => {
+      .catch((err) => {
         const productAux = {} as IProduct;
         Object.assign(productAux, {
           id: '',
@@ -139,7 +139,7 @@ const CreateShoppingListItem: React.FC = () => {
     async (data: ProductFormData) => {
       try {
         let product: IProduct = {} as IProduct;
-        if (product.id) {
+        if (isProduct) {
           product = isProduct;
         } else {
           formRef.current?.setErrors({});
