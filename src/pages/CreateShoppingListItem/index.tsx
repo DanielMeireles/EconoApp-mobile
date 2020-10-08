@@ -139,7 +139,7 @@ const CreateShoppingListItem: React.FC = () => {
     async (data: ProductFormData) => {
       try {
         let product: IProduct = {} as IProduct;
-        if (isProduct) {
+        if (isProduct.id) {
           product = isProduct;
         } else {
           formRef.current?.setErrors({});
