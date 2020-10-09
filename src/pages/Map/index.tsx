@@ -6,19 +6,26 @@ import { useTheme } from 'styled-components';
 
 import { Container, BackButton, Header, HeaderTitle } from './styles';
 
-interface ICoordenate {
-  latitude: number;
+interface ILocation {
+  id: string;
+  date: Date;
+  name: string;
+  brand: string;
   longitude: number;
+  latitude: number;
+  value: number;
 }
 
 type ParamList = {
-  coordenate: {
-    coordenate: ICoordenate;
+  coordenates: {
+    locations: ILocation[];
+    initialLatitude: number;
+    initialLongitude: number;
   };
 };
 
 const Map: React.FC = () => {
-  const route = useRoute<RouteProp<ParamList, 'coordenate'>>();
+  const route = useRoute<RouteProp<ParamList, 'coordenates'>>();
 
   const theme = useTheme();
 
@@ -26,9 +33,7 @@ const Map: React.FC = () => {
 
   const navigation = useNavigation();
 
-  const [isCoordinate, setIsCoordinate] = useState<ICoordenate>(
-    route.params.coordenate,
-  );
+  const [isLocations, setIsLocations] = useState(route.params.locations);
 
   const handleGoBack = useCallback(() => {
     navigation.goBack();
@@ -50,18 +55,28 @@ const Map: React.FC = () => {
         style={{ flex: 1 }}
         ref={map}
         initialRegion={{
-          latitude: isCoordinate.latitude,
-          longitude: isCoordinate.longitude,
+          latitude: route.params.initialLatitude,
+          longitude: route.params.initialLongitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
       >
-        <Marker
-          coordinate={{
-            latitude: isCoordinate.latitude,
-            longitude: isCoordinate.longitude,
-          }}
-        />
+        {isLocations.map((location) => {
+          return (
+            <Marker
+              key={
+                location.id +
+                location.latitude +
+                location.longitude +
+                location.value
+              }
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+              }}
+            />
+          );
+        })}
       </MapView>
     </Container>
   );

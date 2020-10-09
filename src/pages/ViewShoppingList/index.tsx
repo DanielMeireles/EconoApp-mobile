@@ -7,6 +7,8 @@ import {
   useNavigation,
   useIsFocused,
 } from '@react-navigation/native';
+import Geolocation from '@react-native-community/geolocation';
+import { Alert } from 'react-native';
 
 import { useTheme } from 'styled-components';
 import {
@@ -36,6 +38,16 @@ type ParamList = {
   };
 };
 
+interface ILocation {
+  id: string;
+  date: Date;
+  name: string;
+  brand: string;
+  longitude: number;
+  latitude: number;
+  value: number;
+}
+
 const ViewShoppingList: React.FC = () => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -47,6 +59,7 @@ const ViewShoppingList: React.FC = () => {
   const [shoppingListItems, setShoppingListItems] = useState<
     ShoppingListItem[]
   >([]);
+  const [isLocations, setIsLocations] = useState<ILocation[]>([]);
 
   const [isValue, setIsValue] = useState(0.0);
 
@@ -91,14 +104,37 @@ const ViewShoppingList: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shoppingListItems]);
 
-  const handleBestPlace = useCallback(() => {
-    navigation.navigate('Map', {
-      coordenate: {
-        latitude: -21.76417,
-        longitude: -43.35028,
-      },
+  const handleBestPlace = useCallback(async () => {
+    Geolocation.getCurrentPosition(async (pos) => {
+      const { longitude } = pos.coords;
+      const { latitude } = pos.coords;
+
+      await api
+        .get(`/locations/findLocations`, {
+          params: {
+            shopping_list_id: shoppingList.id,
+            date: new Date(),
+            longitude,
+            latitude,
+            maxDistance: 10,
+          },
+        })
+        .then((response) => {
+          const locations: ILocation[] = response.data;
+          navigation.navigate('Map', {
+            locations,
+            initialLongitude: longitude,
+            initialLatitude: latitude,
+          });
+        })
+        .catch((err) => {
+          Alert.alert(
+            'Produtos não encontrados',
+            'Não foram encontrados preços dos productos selecionados',
+          );
+        });
     });
-  }, [navigation]);
+  }, [navigation, shoppingList]);
 
   const navigateToCreateShoppingListItem = useCallback(() => {
     navigation.navigate('CreateShoppingListItem', { shoppingList });
