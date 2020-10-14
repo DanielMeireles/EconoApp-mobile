@@ -59,7 +59,6 @@ const ViewShoppingList: React.FC = () => {
   const [shoppingListItems, setShoppingListItems] = useState<
     ShoppingListItem[]
   >([]);
-  const [isLocations, setIsLocations] = useState<ILocation[]>([]);
 
   const [isValue, setIsValue] = useState(0.0);
 
@@ -165,7 +164,10 @@ const ViewShoppingList: React.FC = () => {
           <ShoppingListItemsTitle>Lista</ShoppingListItemsTitle>
         }
         renderItem={({ item: shoppingListItem }) => (
-          <ShoppingListItemCard shoppingListItem={shoppingListItem} />
+          <ShoppingListItemCard
+            shoppingListItem={shoppingListItem}
+            getShoppingListItems={getShoppingListItems}
+          />
         )}
       />
 

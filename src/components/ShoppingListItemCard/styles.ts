@@ -13,7 +13,7 @@ export const ShoppingListItemsTitle = styled.Text`
   font-family: ${({ theme }) => theme.fonts.medium};
 `;
 
-export const ShoppingListItemContainer = styled.View`
+export const ShoppingListItemContainer = styled.TouchableOpacity`
   background: ${({ theme }) => theme.colors.cardBackground};
   border-radius: 10px;
   padding: 20px 10px 20px 10px;

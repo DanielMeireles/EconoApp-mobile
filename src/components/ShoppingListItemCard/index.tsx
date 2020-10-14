@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { TextInput } from 'react-native';
+import { TextInput, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
@@ -56,6 +56,7 @@ export interface ShoppingListItem {
 
 interface IShoppingListItemProps {
   shoppingListItem: ShoppingListItem;
+  getShoppingListItems(): Promise<void>;
 }
 
 interface ShoppingListItemFormData {
@@ -67,6 +68,7 @@ interface ShoppingListItemFormData {
 
 const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
   shoppingListItem,
+  getShoppingListItems,
 }) => {
   const theme = useTheme();
 
@@ -189,6 +191,37 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
     [shoppingListItem.product.name, getPosition, isItem, isChecked, isPosition],
   );
 
+  const handleDelete = useCallback(async () => {
+    await api
+      .delete('/shoppinglistitems', {
+        params: { id: shoppingListItem.id },
+      })
+      .then(() => {
+        Alert.alert('Sucesso', 'Item excluído com sucesso!');
+        getShoppingListItems();
+      })
+      .catch(() => {
+        Alert.alert('Falha', 'Falha ao excluir o item!');
+      });
+  }, [getShoppingListItems, shoppingListItem.id]);
+
+  const handleLongPress = useCallback(() => {
+    Alert.alert(
+      'Excluir',
+      'Deseja excluir esse item?',
+      [
+        {
+          text: 'Sim',
+          onPress: () => {
+            handleDelete();
+          },
+        },
+        { text: 'Não' },
+      ],
+      { cancelable: false },
+    );
+  }, [handleDelete]);
+
   const handleCheck = useCallback(() => {
     setIsChecked(!isChecked);
     const shoppingListItemAux = {} as ShoppingListItem;
@@ -217,7 +250,7 @@ const ShoppingListItemCard: React.FC<IShoppingListItemProps> = ({
   }, [getPosition, isChecked, isItem, isPosition]);
 
   return (
-    <ShoppingListItemContainer>
+    <ShoppingListItemContainer onLongPress={handleLongPress}>
       <ShoppingListItemMain>
         <ShoppingListItemTitle>
           <CheckBoxButton
