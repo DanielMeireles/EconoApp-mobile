@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
+import { Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 import { format } from 'date-fns';
@@ -50,7 +51,7 @@ const Dashboard: React.FC = () => {
     });
   }, []);
 
-  useEffect(() => {
+  const handleGetShoppingLists = useCallback(() => {
     api.get('/shoppinglists').then((response) => {
       const shoppingListsResponse: ShoppingList[] = response.data;
       setShoppingLists(
@@ -62,7 +63,48 @@ const Dashboard: React.FC = () => {
         }),
       );
     });
+  }, []);
+
+  useEffect(() => {
+    handleGetShoppingLists();
   }, [isFocused]);
+
+  const handleDelete = useCallback(
+    async (id: string) => {
+      await api
+        .delete('/shoppinglists', {
+          params: { id },
+        })
+        .then(() => {
+          handleGetShoppingLists();
+          Alert.alert('Sucesso', 'Item excluído com sucesso!');
+        })
+        .catch(() => {
+          Alert.alert('Falha', 'Falha ao excluir o item!');
+        });
+    },
+    [handleGetShoppingLists],
+  );
+
+  const handleLongPress = useCallback(
+    (id: string) => {
+      Alert.alert(
+        'Excluir',
+        'Deseja excluir essa lista de compra?',
+        [
+          {
+            text: 'Sim',
+            onPress: () => {
+              handleDelete(id);
+            },
+          },
+          { text: 'Não' },
+        ],
+        { cancelable: false },
+      );
+    },
+    [handleDelete],
+  );
 
   const navigateToProfile = useCallback(() => {
     navigate('Profile');
@@ -99,6 +141,7 @@ const Dashboard: React.FC = () => {
             onPress={() => {
               navigate('ViewShoppingList', { shoppingList });
             }}
+            onLongPress={() => handleLongPress(shoppingList.id)}
           >
             <ShoppingListImage
               source={{

@@ -1,7 +1,6 @@
 import styled from 'styled-components/native';
 import { FlatList } from 'react-native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
-import { RectButton } from 'react-native-gesture-handler';
 
 import Button from '../../components/Button';
 import { ShoppingList } from './index';
@@ -53,7 +52,7 @@ export const ShoppingListsTitle = styled.Text`
   font-family: ${({ theme }) => theme.fonts.medium};
 `;
 
-export const ShoppingListContainer = styled(RectButton)`
+export const ShoppingListContainer = styled.TouchableOpacity`
   background: ${({ theme }) => theme.colors.cardBackground};
   border-radius: 10px;
   padding: 20px;
