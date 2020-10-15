@@ -11,6 +11,7 @@ import * as Yup from 'yup';
 
 import { useTheme } from 'styled-components';
 import { Platform, TextInput, Alert } from 'react-native';
+import { REACT_APP_SHOPPING_LIST_IMAGE } from '@env';
 import {
   Container,
   Header,
@@ -162,7 +163,7 @@ const CreateShoppingList: React.FC = () => {
           <ShoppingListImageButton onPress={handleUpdateShoppingListImage}>
             <ShoppingListImage
               source={{
-                uri: 'https://api.adorable.io/avatars/186/abott@adorable.png',
+                uri: REACT_APP_SHOPPING_LIST_IMAGE,
               }}
             />
           </ShoppingListImageButton>

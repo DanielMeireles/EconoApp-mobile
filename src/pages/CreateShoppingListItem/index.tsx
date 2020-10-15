@@ -10,6 +10,9 @@ import { useRoute, RouteProp } from '@react-navigation/native';
 
 import { useTheme } from 'styled-components';
 import { TextInput, Alert } from 'react-native';
+
+import { REACT_APP_PRODUCT_IMAGE } from '@env';
+
 import {
   Container,
   Header,
@@ -213,7 +216,7 @@ const CreateShoppingListItem: React.FC = () => {
           <ShoppingListImageButton onPress={handleUpdateImage}>
             <ShoppingListImage
               source={{
-                uri: 'https://api.adorable.io/avatars/186/abott@adorable.png',
+                uri: REACT_APP_PRODUCT_IMAGE,
               }}
             />
           </ShoppingListImageButton>
