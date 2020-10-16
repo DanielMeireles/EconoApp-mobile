@@ -45,12 +45,6 @@ const Dashboard: React.FC = () => {
 
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    api.get('/shoppinglists').then((response) => {
-      setShoppingLists(response.data);
-    });
-  }, []);
-
   const handleGetShoppingLists = useCallback(() => {
     api.get('/shoppinglists').then((response) => {
       const shoppingListsResponse: ShoppingList[] = response.data;
