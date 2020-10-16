@@ -49,7 +49,7 @@ const Map: React.FC = () => {
             color={theme.colors.headerElement}
           />
         </BackButton>
-        <HeaderTitle />
+        <HeaderTitle>Localização</HeaderTitle>
       </Header>
       <MapView
         style={{ flex: 1 }}
