@@ -19,14 +19,18 @@ import {
   ProductValue,
 } from './styles';
 
-interface ILocation {
+interface IProduct {
   id: string;
-  date: Date;
   name: string;
   brand: string;
-  longitude: number;
-  latitude: number;
   value: number;
+}
+
+export interface ILocation {
+  date: Date;
+  latitude: number;
+  longitude: number;
+  products: IProduct[];
 }
 
 type ParamList = {
@@ -84,12 +88,7 @@ const Map: React.FC = () => {
         {isLocations.map((location) => {
           return (
             <Marker
-              key={
-                location.id +
-                location.latitude +
-                location.longitude +
-                location.value
-              }
+              key={location.latitude + location.longitude}
               coordinate={{
                 latitude: location.latitude,
                 longitude: location.longitude,
@@ -118,11 +117,15 @@ const Map: React.FC = () => {
         contentContainerStyle={{ paddingRight: width - cardWidth }}
       >
         {isLocations.map((location) => (
-          <Card key={location.id}>
+          <Card key={location.latitude + location.longitude}>
             <CardData>
-              <ProductName>{location.name}</ProductName>
-              <ProductBrand>{location.brand}</ProductBrand>
-              <ProductValue>R$ {location.value.toFixed(2)}</ProductValue>
+              {location.products.map((product) => (
+                <>
+                  <ProductName>{product.name}</ProductName>
+                  <ProductBrand>{product.brand}</ProductBrand>
+                  <ProductValue>R$ {product.value.toFixed(2)}</ProductValue>
+                </>
+              ))}
             </CardData>
           </Card>
         ))}

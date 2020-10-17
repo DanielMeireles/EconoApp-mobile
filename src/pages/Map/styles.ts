@@ -42,8 +42,8 @@ export const Card = styled.View`
 `;
 
 export const CardData = styled.View`
-  padding: 5px;
-  height: 100px;
+  border-radius: 10px;
+  padding: 10px;
   width: 140px;
   background: ${({ theme }) => theme.colors.cardBackground};
 `;
@@ -55,6 +55,7 @@ export const ProductName = styled.Text`
   line-height: 28px;
   align-self: center;
 `;
+
 export const ProductBrand = styled.Text`
   color: ${({ theme }) => theme.colors.cardText};
   font-size: 20px;
@@ -62,6 +63,7 @@ export const ProductBrand = styled.Text`
   line-height: 28px;
   align-self: center;
 `;
+
 export const ProductValue = styled.Text`
   color: ${({ theme }) => theme.colors.cardElement};
   font-size: 20px;

@@ -38,14 +38,18 @@ type ParamList = {
   };
 };
 
-interface ILocation {
+interface IProduct {
   id: string;
-  date: Date;
   name: string;
   brand: string;
-  longitude: number;
-  latitude: number;
   value: number;
+}
+
+export interface ILocation {
+  date: Date;
+  latitude: number;
+  longitude: number;
+  products: IProduct[];
 }
 
 const ViewShoppingList: React.FC = () => {
