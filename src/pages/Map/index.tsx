@@ -1,10 +1,23 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import MapView, { Marker } from 'react-native-maps';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
 
-import { Container, BackButton, Header, HeaderTitle } from './styles';
+import { Animated, Dimensions } from 'react-native';
+
+import {
+  Container,
+  BackButton,
+  Header,
+  HeaderTitle,
+  ScrollView,
+  Card,
+  CardData,
+  ProductName,
+  ProductBrand,
+  ProductValue,
+} from './styles';
 
 interface ILocation {
   id: string;
@@ -34,6 +47,13 @@ const Map: React.FC = () => {
   const navigation = useNavigation();
 
   const [isLocations, setIsLocations] = useState(route.params.locations);
+
+  const { width, height } = Dimensions.get('window');
+
+  const [animation, setAnimation] = useState(new Animated.Value(0));
+
+  const cardHeight = height / 4;
+  const cardWidth = cardHeight - 50;
 
   const handleGoBack = useCallback(() => {
     navigation.goBack();
@@ -78,6 +98,35 @@ const Map: React.FC = () => {
           );
         })}
       </MapView>
+      <ScrollView
+        horizontal
+        scrollEventThrottle={1}
+        showsHorizontalScrollIndicator={false}
+        snapToInterval={cardWidth}
+        onScroll={Animated.event(
+          [
+            {
+              nativeEvent: {
+                contentOffset: {
+                  x: animation,
+                },
+              },
+            },
+          ],
+          { useNativeDriver: true },
+        )}
+        contentContainerStyle={{ paddingRight: width - cardWidth }}
+      >
+        {isLocations.map((location) => (
+          <Card key={location.id}>
+            <CardData>
+              <ProductName>{location.name}</ProductName>
+              <ProductBrand>{location.brand}</ProductBrand>
+              <ProductValue>R$ {location.value.toFixed(2)}</ProductValue>
+            </CardData>
+          </Card>
+        ))}
+      </ScrollView>
     </Container>
   );
 };
