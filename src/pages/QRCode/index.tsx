@@ -50,6 +50,14 @@ const QRCode: React.FC = () => {
     }
   }, [isTorch]);
 
+  const handleNavigateSuccessPage = useCallback(() => {
+    navigation.navigate('SuccessPage', {
+      title: 'Item atualizado',
+      description: 'O item foi atualizado com sucesso!',
+      goToPage: 'ViewShoppingList',
+    });
+  }, [navigation]);
+
   const onSuccess = async (e: Event): Promise<void> => {
     const qrcode: IQRCode = JSON.parse(e.data);
 
@@ -86,7 +94,7 @@ const QRCode: React.FC = () => {
 
     await api.put('/shoppinglistitems', shoppingListAux);
 
-    navigation.goBack();
+    handleNavigateSuccessPage();
   };
 
   const handleGoBack = useCallback(() => {

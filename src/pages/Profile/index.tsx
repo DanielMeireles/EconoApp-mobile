@@ -57,6 +57,14 @@ const Profile: React.FC = () => {
     navigation.goBack();
   }, [navigation]);
 
+  const handleNavigateSuccessPage = useCallback(() => {
+    navigation.navigate('SuccessPage', {
+      title: 'Perfil atualizado',
+      description: 'Seu perfil foi atualizado com sucesso!',
+      goToPage: 'Dashboard',
+    });
+  }, [navigation]);
+
   const handleUpdateAvatar = useCallback(() => {
     ImagePicker.showImagePicker(
       {
@@ -143,8 +151,7 @@ const Profile: React.FC = () => {
 
         updateUser(response.data);
 
-        Alert.alert('Perfil atualizado com sucesso!');
-        navigation.goBack();
+        handleNavigateSuccessPage();
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -159,7 +166,7 @@ const Profile: React.FC = () => {
         );
       }
     },
-    [navigation, updateUser],
+    [handleNavigateSuccessPage, updateUser],
   );
 
   return (
